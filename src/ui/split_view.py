@@ -1,8 +1,8 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog,
-    QLabel, QFrame, QSpinBox, QMessageBox, QSlider
+    QLabel, QFrame, QSpinBox, QSlider, QLineEdit
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from src.modules.split import Splitter
 import os
 
@@ -27,6 +27,13 @@ class SplitView(QWidget):
         # Header
         header = self._create_header()
         layout.addWidget(header)
+
+        # Status message
+        self.status_label = QLabel("")
+        self.status_label.setObjectName("statusLabel")
+        self.status_label.setWordWrap(True)
+        self.status_label.hide()
+        layout.addWidget(self.status_label)
 
         # File section
         file_section = self._create_file_section()
@@ -75,6 +82,7 @@ class SplitView(QWidget):
 
         self.file_label = QLabel("No file selected")
         self.file_label.setObjectName("fileLabel")
+        self.file_label.setWordWrap(True)
         layout.addWidget(self.file_label)
 
         self.page_info_label = QLabel("")
@@ -96,23 +104,24 @@ class SplitView(QWidget):
         layout.setContentsMargins(24, 24, 24, 24)
         layout.setSpacing(16)
 
-        options_header = QLabel("Split Options")
+        options_header = QLabel("Options")
         options_header.setProperty("class", "list-header")
         layout.addWidget(options_header)
 
-        # Pages per file option with slider
-        pages_layout = QVBoxLayout()
+        # Split: Pages per file option with slider
+        split_label = QLabel("Split - Pages per file:")
+        split_label.setObjectName("optionLabel")
+        layout.addWidget(split_label)
         
-        label_layout = QHBoxLayout()
-        label_layout.addWidget(QLabel("Pages per file:"))
+        pages_layout = QHBoxLayout()
         self.pages_spinbox = QSpinBox()
         self.pages_spinbox.setMinimum(1)
         self.pages_spinbox.setMaximum(1)
         self.pages_spinbox.setValue(1)
         self.pages_spinbox.valueChanged.connect(self._sync_slider_from_spinbox)
-        label_layout.addWidget(self.pages_spinbox)
-        label_layout.addStretch()
-        pages_layout.addLayout(label_layout)
+        pages_layout.addWidget(self.pages_spinbox)
+        pages_layout.addStretch()
+        layout.addLayout(pages_layout)
         
         # Slider with min/max labels
         slider_container = QHBoxLayout()
@@ -134,9 +143,16 @@ class SplitView(QWidget):
         self.slider_max_label.setObjectName("sliderLabel")
         slider_container.addWidget(self.slider_max_label)
         
-        pages_layout.addLayout(slider_container)
+        layout.addLayout(slider_container)
+
+        # Extract: Page numbers input
+        extract_label = QLabel("Extract - Page numbers (e.g., 1,3,5-7):")
+        extract_label.setObjectName("optionLabel")
+        layout.addWidget(extract_label)
         
-        layout.addLayout(pages_layout)
+        self.pages_input = QLineEdit()
+        self.pages_input.setPlaceholderText("Enter page numbers...")
+        layout.addWidget(self.pages_input)
 
         return container
 
@@ -153,12 +169,28 @@ class SplitView(QWidget):
 
         layout.addStretch()
 
+        extract_btn = QPushButton("📄  Extract Pages")
+        extract_btn.setProperty("class", "secondary-button")
+        extract_btn.clicked.connect(self.extract_pages)
+        layout.addWidget(extract_btn)
+
         split_btn = QPushButton("✂️  Split PDF")
         split_btn.setProperty("class", "primary-button")
         split_btn.clicked.connect(self.split_file)
         layout.addWidget(split_btn)
 
         return container
+
+    def _show_status(self, message, is_error=False):
+        """Show status message inline."""
+        self.status_label.setText(message)
+        self.status_label.setProperty("error", is_error)
+        self.status_label.style().unpolish(self.status_label)
+        self.status_label.style().polish(self.status_label)
+        self.status_label.show()
+        
+        # Auto-hide after 5 seconds
+        QTimer.singleShot(5000, self.status_label.hide)
 
     def _sync_slider_from_spinbox(self, value):
         """Sync slider when spinbox changes."""
@@ -172,6 +204,22 @@ class SplitView(QWidget):
         self.pages_spinbox.setValue(value)
         self.pages_spinbox.blockSignals(False)
 
+    def _parse_page_numbers(self, text):
+        """Parse page numbers from text input (e.g., '1,3,5-7' -> [0,2,4,5,6])."""
+        pages = set()
+        try:
+            for part in text.split(','):
+                part = part.strip()
+                if '-' in part:
+                    start, end = part.split('-')
+                    start, end = int(start.strip()), int(end.strip())
+                    pages.update(range(start - 1, end))
+                else:
+                    pages.add(int(part) - 1)
+            return sorted(pages)
+        except:
+            return None
+
     def select_file(self):
         """Select input PDF file."""
         file, _ = QFileDialog.getOpenFileName(
@@ -184,14 +232,11 @@ class SplitView(QWidget):
                 self.total_pages = len(reader.pages)
                 
                 if self.total_pages == 0:
-                    QMessageBox.warning(
-                        self, "Empty PDF", 
-                        "The selected PDF has no pages and cannot be split."
-                    )
+                    self._show_status("⚠️ The selected PDF has no pages and cannot be split.", True)
                     return
                 
                 self.input_file = file
-                self.file_label.setText(os.path.basename(file))
+                self.file_label.setText(file)
                 self.page_info_label.setText(f"Total pages: {self.total_pages}")
                 
                 # Update spinbox and slider maximum
@@ -206,7 +251,7 @@ class SplitView(QWidget):
                 self.actions_section.setEnabled(True)
                 
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"Failed to read PDF:\n{str(e)}")
+                self._show_status(f"❌ Failed to read PDF: {str(e)}", True)
 
     def clear_file(self):
         """Clear selected file."""
@@ -219,13 +264,14 @@ class SplitView(QWidget):
         self.pages_slider.setMaximum(1)
         self.pages_slider.setValue(1)
         self.slider_max_label.setText("1")
+        self.pages_input.clear()
         self.options_section.setEnabled(False)
         self.actions_section.setEnabled(False)
 
     def split_file(self):
         """Split the PDF file."""
         if not self.input_file:
-            QMessageBox.warning(self, "No File", "Please select a PDF file to split.")
+            self._show_status("⚠️ Please select a PDF file to split.", True)
             return
 
         output_dir = QFileDialog.getExistingDirectory(self, "Select Output Directory")
@@ -234,13 +280,42 @@ class SplitView(QWidget):
                 with Splitter(self.input_file) as splitter:
                     pages_per_file = self.pages_spinbox.value()
                     file_count = splitter.split_by_pages(output_dir, pages_per_file)
-                QMessageBox.information(
-                    self, "Success",
-                    f"PDF split successfully!\nCreated {file_count} files in: {output_dir}"
-                )
+                self._show_status(f"✅ PDF split successfully! Created {file_count} files in: {output_dir}")
                 self.clear_file()
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"Failed to split PDF:\n{str(e)}")
+                self._show_status(f"❌ Failed to split PDF: {str(e)}", True)
+
+    def extract_pages(self):
+        """Extract specific pages from PDF."""
+        if not self.input_file:
+            self._show_status("⚠️ Please select a PDF file to extract pages from.", True)
+            return
+
+        page_text = self.pages_input.text().strip()
+        if not page_text:
+            self._show_status("⚠️ Please enter page numbers to extract.", True)
+            return
+
+        page_numbers = self._parse_page_numbers(page_text)
+        if page_numbers is None:
+            self._show_status("❌ Invalid page numbers format. Use format like: 1,3,5-7", True)
+            return
+
+        if not page_numbers:
+            self._show_status("⚠️ No valid page numbers specified.", True)
+            return
+
+        output_file, _ = QFileDialog.getSaveFileName(
+            self, "Save Extracted Pages", "extracted.pdf", "PDF Files (*.pdf)"
+        )
+        if output_file:
+            try:
+                with Splitter(self.input_file) as splitter:
+                    splitter.extract_pages(output_file, page_numbers)
+                self._show_status(f"✅ Pages extracted successfully! Saved to: {output_file}")
+                self.clear_file()
+            except Exception as e:
+                self._show_status(f"❌ Failed to extract pages: {str(e)}", True)
 
     def _apply_styles(self):
         """Apply styles to split view."""
@@ -274,9 +349,31 @@ class SplitView(QWidget):
                 font-weight: 500;
             }
             
+            QLabel#optionLabel {
+                font-size: 13px;
+                font-weight: 600;
+                color: #495057;
+                margin-top: 8px;
+            }
+            
             QLabel#sliderLabel {
                 font-size: 12px;
                 color: #6c757d;
                 min-width: 30px;
+            }
+            
+            QLabel#statusLabel {
+                font-size: 14px;
+                padding: 12px 16px;
+                border-radius: 8px;
+                background: #d1e7dd;
+                color: #0f5132;
+                border: 1px solid #badbcc;
+            }
+            
+            QLabel#statusLabel[error="true"] {
+                background: #f8d7da;
+                color: #842029;
+                border: 1px solid #f5c2c7;
             }
         """)

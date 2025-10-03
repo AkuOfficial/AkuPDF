@@ -8,9 +8,8 @@ from PySide6.QtWidgets import (
     QLabel,
     QFrame,
     QListWidgetItem,
-    QMessageBox,
 )
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QTimer
 from src.modules.merge import Merger
 import os
 
@@ -34,6 +33,13 @@ class MergeView(QWidget):
         # Header
         header = self._create_header()
         layout.addWidget(header)
+
+        # Status message
+        self.status_label = QLabel("")
+        self.status_label.setObjectName("statusLabel")
+        self.status_label.setWordWrap(True)
+        self.status_label.hide()
+        layout.addWidget(self.status_label)
 
         # File section
         file_section = self._create_file_section()
@@ -77,6 +83,7 @@ class MergeView(QWidget):
         self.file_list.setMinimumHeight(300)
         self.file_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
         self.file_list.customContextMenuRequested.connect(self._show_context_menu)
+        self.file_list.itemSelectionChanged.connect(self._update_remove_button_state)
         layout.addWidget(self.file_list)
 
         buttons_layout = QHBoxLayout()
@@ -86,10 +93,11 @@ class MergeView(QWidget):
         add_btn.clicked.connect(self.add_files)
         buttons_layout.addWidget(add_btn)
 
-        remove_btn = QPushButton("Remove Selected")
-        remove_btn.setProperty("class", "secondary-button")
-        remove_btn.clicked.connect(self.remove_selected_file)
-        buttons_layout.addWidget(remove_btn)
+        self.remove_btn = QPushButton("Remove Selected")
+        self.remove_btn.setProperty("class", "secondary-button")
+        self.remove_btn.clicked.connect(self.remove_selected_file)
+        self.remove_btn.setEnabled(False)
+        buttons_layout.addWidget(self.remove_btn)
 
         layout.addLayout(buttons_layout)
 
@@ -101,19 +109,42 @@ class MergeView(QWidget):
         layout = QHBoxLayout(container)
         layout.setSpacing(16)
 
-        clear_btn = QPushButton("Clear All")
-        clear_btn.setProperty("class", "secondary-button")
-        clear_btn.clicked.connect(self.clear_files)
-        layout.addWidget(clear_btn)
+        self.clear_btn = QPushButton("Clear All")
+        self.clear_btn.setProperty("class", "secondary-button")
+        self.clear_btn.clicked.connect(self.clear_files)
+        self.clear_btn.setEnabled(False)
+        layout.addWidget(self.clear_btn)
 
         layout.addStretch()
 
-        merge_btn = QPushButton("🔗  Merge PDFs")
-        merge_btn.setProperty("class", "primary-button")
-        merge_btn.clicked.connect(self.merge_files)
-        layout.addWidget(merge_btn)
+        self.merge_btn = QPushButton("🔗  Merge PDFs")
+        self.merge_btn.setProperty("class", "primary-button")
+        self.merge_btn.clicked.connect(self.merge_files)
+        self.merge_btn.setEnabled(False)
+        layout.addWidget(self.merge_btn)
 
         return container
+
+    def _update_remove_button_state(self):
+        """Enable/disable remove button based on selection."""
+        self.remove_btn.setEnabled(self.file_list.currentRow() >= 0)
+
+    def _update_button_states(self):
+        """Update all button states based on file count."""
+        has_files = len(self.files) > 0
+        self.clear_btn.setEnabled(has_files)
+        self.merge_btn.setEnabled(len(self.files) >= 2)
+
+    def _show_status(self, message, is_error=False):
+        """Show status message inline."""
+        self.status_label.setText(message)
+        self.status_label.setProperty("error", is_error)
+        self.status_label.style().unpolish(self.status_label)
+        self.status_label.style().polish(self.status_label)
+        self.status_label.show()
+        
+        # Auto-hide after 5 seconds
+        QTimer.singleShot(5000, self.status_label.hide)
 
     def add_files(self):
         """Add PDF files to the list."""
@@ -124,9 +155,9 @@ class MergeView(QWidget):
             for file_path in files:
                 if file_path not in self.files:
                     self.files.append(file_path)
-                    item = QListWidgetItem(os.path.basename(file_path))
-                    item.setToolTip(file_path)
+                    item = QListWidgetItem(file_path)
                     self.file_list.addItem(item)
+            self._update_button_states()
 
     def remove_selected_file(self):
         """Remove the selected file from the list."""
@@ -134,6 +165,7 @@ class MergeView(QWidget):
         if current_row >= 0:
             self.file_list.takeItem(current_row)
             del self.files[current_row]
+            self._update_button_states()
 
     def _show_context_menu(self, position):
         """Show context menu for file list."""
@@ -149,11 +181,12 @@ class MergeView(QWidget):
         """Clear all files from the list."""
         self.files.clear()
         self.file_list.clear()
+        self._update_button_states()
 
     def merge_files(self):
         """Merge the selected PDF files."""
-        if not self.files:
-            QMessageBox.warning(self, "No Files", "Please add PDF files to merge.")
+        if len(self.files) < 2:
+            self._show_status("⚠️ Please add at least 2 PDF files to merge.", True)
             return
 
         output_file, _ = QFileDialog.getSaveFileName(
@@ -163,14 +196,10 @@ class MergeView(QWidget):
             try:
                 with Merger() as merger:
                     merger.process(self.files, output_file)
-                QMessageBox.information(
-                    self,
-                    "Success",
-                    f"PDFs merged successfully!\nSaved to: {output_file}",
-                )
+                self._show_status(f"✅ PDFs merged successfully! Saved to: {output_file}")
                 self.clear_files()
             except Exception as e:
-                QMessageBox.critical(self, "Error", f"Failed to merge PDFs:\n{str(e)}")
+                self._show_status(f"❌ Failed to merge PDFs: {str(e)}", True)
 
     def _apply_styles(self):
         """Apply styles to merge view."""
@@ -188,5 +217,20 @@ class MergeView(QWidget):
             QLabel#sectionSubtitle {
                 font-size: 16px;
                 color: #6c757d;
+            }
+            
+            QLabel#statusLabel {
+                font-size: 14px;
+                padding: 12px 16px;
+                border-radius: 8px;
+                background: #d1e7dd;
+                color: #0f5132;
+                border: 1px solid #badbcc;
+            }
+            
+            QLabel#statusLabel[error="true"] {
+                background: #f8d7da;
+                color: #842029;
+                border: 1px solid #f5c2c7;
             }
         """)
