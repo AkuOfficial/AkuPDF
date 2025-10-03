@@ -28,4 +28,11 @@ dev = [
 ]
 #build = [
 #    "pyinstaller==6.16.0"
+# pyinstaller --onedir --name MyApp main.py
 #]
+
+
+#[tool.ruff]
+#line-length = 120
+#indent-width = 4
+#target-version = "py313"

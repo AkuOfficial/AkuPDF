@@ -1,0 +1,36 @@
+This application is licensed under the Apache License 2.0.
+See the LICENSE file for details.
+
+Third-party components:
+
+- PySide6
+  Licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0-only)
+  A copy of the license is provided in licenses/LGPL-3.0-PySide6.txt.
+  You may replace PySide6 with a compatible version as allowed by LGPL-3.0.
+
+- pypdf
+  Licensed under the BSD 3-Clause License.
+  See licenses/BSD-3-Clause-pypdf.txt for details.
+
+- QDarkStyle
+  Licensed under the MIT License.
+  See licenses/MIT-QDarkStyle.txt for details.
+
+- qt-material
+  Licensed under the BSD 2-Clause License.
+  See licenses/BSD-2-Clause-qt-material.txt for details.
+
+- pytest
+  Licensed under the MIT License.
+  See licenses/MIT-pytest.txt for details.
+  (Only used for testing, not required at runtime.)
+
+- ruff
+  Licensed under the MIT License.
+  See licenses/MIT-ruff.txt for details.
+  (Only used for development, not required at runtime.)
+
+- ty
+  Licensed under the MIT License.
+  See licenses/MIT-ty.txt for details.
+  (Only used for development, not required at runtime.)
