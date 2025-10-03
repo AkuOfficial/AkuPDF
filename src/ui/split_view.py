@@ -1,7 +1,8 @@
 from PySide6.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QFileDialog,
-    QLabel, QFrame, QSpinBox, QMessageBox
+    QLabel, QFrame, QSpinBox, QMessageBox, QSlider
 )
+from PySide6.QtCore import Qt
 from src.modules.split import Splitter
 import os
 
@@ -13,6 +14,7 @@ class SplitView(QWidget):
         super().__init__()
         self._on_back_click = on_back_click
         self.input_file = None
+        self.total_pages = 0
         self._setup_ui()
         self._apply_styles()
 
@@ -31,12 +33,14 @@ class SplitView(QWidget):
         layout.addWidget(file_section)
 
         # Options section
-        options_section = self._create_options_section()
-        layout.addWidget(options_section)
+        self.options_section = self._create_options_section()
+        self.options_section.setEnabled(False)
+        layout.addWidget(self.options_section)
 
         # Actions
-        actions = self._create_actions()
-        layout.addWidget(actions)
+        self.actions_section = self._create_actions()
+        self.actions_section.setEnabled(False)
+        layout.addWidget(self.actions_section)
 
         layout.addStretch()
 
@@ -73,6 +77,10 @@ class SplitView(QWidget):
         self.file_label.setObjectName("fileLabel")
         layout.addWidget(self.file_label)
 
+        self.page_info_label = QLabel("")
+        self.page_info_label.setObjectName("pageInfoLabel")
+        layout.addWidget(self.page_info_label)
+
         select_btn = QPushButton("📁  Select PDF File")
         select_btn.setProperty("class", "add-button")
         select_btn.clicked.connect(self.select_file)
@@ -92,15 +100,42 @@ class SplitView(QWidget):
         options_header.setProperty("class", "list-header")
         layout.addWidget(options_header)
 
-        # Pages per file option
-        pages_layout = QHBoxLayout()
-        pages_layout.addWidget(QLabel("Pages per file:"))
+        # Pages per file option with slider
+        pages_layout = QVBoxLayout()
+        
+        label_layout = QHBoxLayout()
+        label_layout.addWidget(QLabel("Pages per file:"))
         self.pages_spinbox = QSpinBox()
         self.pages_spinbox.setMinimum(1)
-        self.pages_spinbox.setMaximum(100)
+        self.pages_spinbox.setMaximum(1)
         self.pages_spinbox.setValue(1)
-        pages_layout.addWidget(self.pages_spinbox)
-        pages_layout.addStretch()
+        self.pages_spinbox.valueChanged.connect(self._sync_slider_from_spinbox)
+        label_layout.addWidget(self.pages_spinbox)
+        label_layout.addStretch()
+        pages_layout.addLayout(label_layout)
+        
+        # Slider with min/max labels
+        slider_container = QHBoxLayout()
+        
+        self.slider_min_label = QLabel("1")
+        self.slider_min_label.setObjectName("sliderLabel")
+        slider_container.addWidget(self.slider_min_label)
+        
+        self.pages_slider = QSlider(Qt.Orientation.Horizontal)
+        self.pages_slider.setMinimum(1)
+        self.pages_slider.setMaximum(1)
+        self.pages_slider.setValue(1)
+        self.pages_slider.setTickPosition(QSlider.TickPosition.TicksBelow)
+        self.pages_slider.setTickInterval(1)
+        self.pages_slider.valueChanged.connect(self._sync_spinbox_from_slider)
+        slider_container.addWidget(self.pages_slider)
+        
+        self.slider_max_label = QLabel("1")
+        self.slider_max_label.setObjectName("sliderLabel")
+        slider_container.addWidget(self.slider_max_label)
+        
+        pages_layout.addLayout(slider_container)
+        
         layout.addLayout(pages_layout)
 
         return container
@@ -125,19 +160,67 @@ class SplitView(QWidget):
 
         return container
 
+    def _sync_slider_from_spinbox(self, value):
+        """Sync slider when spinbox changes."""
+        self.pages_slider.blockSignals(True)
+        self.pages_slider.setValue(value)
+        self.pages_slider.blockSignals(False)
+
+    def _sync_spinbox_from_slider(self, value):
+        """Sync spinbox when slider changes."""
+        self.pages_spinbox.blockSignals(True)
+        self.pages_spinbox.setValue(value)
+        self.pages_spinbox.blockSignals(False)
+
     def select_file(self):
         """Select input PDF file."""
         file, _ = QFileDialog.getOpenFileName(
             self, "Select PDF File", "", "PDF Files (*.pdf)"
         )
         if file:
-            self.input_file = file
-            self.file_label.setText(os.path.basename(file))
+            try:
+                from pypdf import PdfReader
+                reader = PdfReader(file, strict=False)
+                self.total_pages = len(reader.pages)
+                
+                if self.total_pages == 0:
+                    QMessageBox.warning(
+                        self, "Empty PDF", 
+                        "The selected PDF has no pages and cannot be split."
+                    )
+                    return
+                
+                self.input_file = file
+                self.file_label.setText(os.path.basename(file))
+                self.page_info_label.setText(f"Total pages: {self.total_pages}")
+                
+                # Update spinbox and slider maximum
+                self.pages_spinbox.setMaximum(self.total_pages)
+                self.pages_slider.setMaximum(self.total_pages)
+                
+                # Update slider labels
+                self.slider_max_label.setText(str(self.total_pages))
+                
+                # Enable options and actions
+                self.options_section.setEnabled(True)
+                self.actions_section.setEnabled(True)
+                
+            except Exception as e:
+                QMessageBox.critical(self, "Error", f"Failed to read PDF:\n{str(e)}")
 
     def clear_file(self):
         """Clear selected file."""
         self.input_file = None
+        self.total_pages = 0
         self.file_label.setText("No file selected")
+        self.page_info_label.setText("")
+        self.pages_spinbox.setMaximum(1)
+        self.pages_spinbox.setValue(1)
+        self.pages_slider.setMaximum(1)
+        self.pages_slider.setValue(1)
+        self.slider_max_label.setText("1")
+        self.options_section.setEnabled(False)
+        self.actions_section.setEnabled(False)
 
     def split_file(self):
         """Split the PDF file."""
@@ -183,5 +266,17 @@ class SplitView(QWidget):
                 padding: 8px;
                 background: #f8f9fa;
                 border-radius: 4px;
+            }
+            
+            QLabel#pageInfoLabel {
+                font-size: 13px;
+                color: #6c757d;
+                font-weight: 500;
+            }
+            
+            QLabel#sliderLabel {
+                font-size: 12px;
+                color: #6c757d;
+                min-width: 30px;
             }
         """)

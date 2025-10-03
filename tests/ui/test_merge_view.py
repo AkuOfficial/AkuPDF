@@ -40,19 +40,35 @@ def test_clear_files(merge_view):
     merge_view.files = ["test1.pdf", "test2.pdf"]
     merge_view.file_list.addItem("test1.pdf")
     merge_view.file_list.addItem("test2.pdf")
-
+    
     merge_view.clear_files()
-
+    
     assert len(merge_view.files) == 0
     assert merge_view.file_list.count() == 0
+
+
+def test_remove_selected_file(merge_view):
+    """Test removing a selected file from the list."""
+    merge_view.files = ["test1.pdf", "test2.pdf", "test3.pdf"]
+    merge_view.file_list.addItem("test1.pdf")
+    merge_view.file_list.addItem("test2.pdf")
+    merge_view.file_list.addItem("test3.pdf")
+    
+    # Select second item
+    merge_view.file_list.setCurrentRow(1)
+    merge_view.remove_selected_file()
+    
+    assert len(merge_view.files) == 2
+    assert merge_view.file_list.count() == 2
+    assert "test2.pdf" not in merge_view.files
 
 
 def test_back_callback(app):
     """Test that back callback is called."""
     callback_called = []
-
+    
     def on_back_click():
         callback_called.append(True)
-
+    
     view = MergeView(on_back_click=on_back_click)
     assert view is not None
