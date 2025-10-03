@@ -17,7 +17,6 @@ def count_pages(pdf_path: str) -> int:
 
 
 class TestMerger:
-
     @pytest.fixture
     def tmp_output(self, tmp_path: Path) -> Path:
         return tmp_path / "output.pdf"
@@ -25,7 +24,9 @@ class TestMerger:
     def test_basic_merge(self, tmp_output):
         with Merger() as merger:
             merger.process([path("sample.pdf"), path("blank.pdf")], str(tmp_output))
-        assert count_pages(str(tmp_output)) == count_pages(path("sample.pdf")) + count_pages(path("blank.pdf"))
+        assert count_pages(str(tmp_output)) == count_pages(
+            path("sample.pdf")
+        ) + count_pages(path("blank.pdf"))
 
     def test_multiple_files(self, tmp_output):
         files = [path(f"multi_small_{i}.pdf") for i in range(3)]
@@ -66,7 +67,9 @@ class TestMerger:
     def test_missing_file(self, tmp_output):
         with Merger() as merger:
             with pytest.raises(FileNotFoundError):
-                merger.process([path("does_not_exist.pdf"), path("sample.pdf")], str(tmp_output))
+                merger.process(
+                    [path("does_not_exist.pdf"), path("sample.pdf")], str(tmp_output)
+                )
 
     def test_duplicate_files(self, tmp_output):
         with Merger() as merger:

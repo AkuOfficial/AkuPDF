@@ -3,7 +3,6 @@ from pypdf import PdfWriter
 
 
 class Merger:
-
     def __init__(self):
         self.engine = PdfWriter()
 
