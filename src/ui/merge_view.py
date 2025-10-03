@@ -22,6 +22,7 @@ class MergeView(QWidget):
         self._on_back_click = on_back_click
         self.files = []
         self._setup_ui()
+        self._apply_styles()
 
     def _setup_ui(self):
         """Set up the merge view UI."""
@@ -46,14 +47,14 @@ class MergeView(QWidget):
         container = QWidget()
         layout = QVBoxLayout(container)
         layout.setContentsMargins(0, 0, 0, 0)
-        layout.setSpacing(8)
+        layout.setSpacing(12)
 
         title = QLabel("Merge PDF Files")
-        title.setProperty("class", "section-title")
+        title.setObjectName("sectionTitle")
         layout.addWidget(title)
 
         subtitle = QLabel("Select PDF files to combine into a single document")
-        subtitle.setProperty("class", "section-subtitle")
+        subtitle.setObjectName("sectionSubtitle")
         layout.addWidget(subtitle)
 
         return container
@@ -141,3 +142,22 @@ class MergeView(QWidget):
                 self.clear_files()
             except Exception as e:
                 QMessageBox.critical(self, "Error", f"Failed to merge PDFs:\n{str(e)}")
+
+    def _apply_styles(self):
+        """Apply styles to merge view."""
+        self.setStyleSheet("""
+            MergeView {
+                background: #f8f9fa;
+            }
+            
+            QLabel#sectionTitle {
+                font-size: 32px;
+                font-weight: 700;
+                color: #212529;
+            }
+            
+            QLabel#sectionSubtitle {
+                font-size: 16px;
+                color: #6c757d;
+            }
+        """)

@@ -1,25 +1,13 @@
 from typing import Callable
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import (
-    QLabel,
-    QFrame,
-    QVBoxLayout,
-    QSizePolicy,
-    QGraphicsDropShadowEffect,
-)
+from PySide6.QtWidgets import QLabel, QFrame, QVBoxLayout, QSizePolicy, QGraphicsDropShadowEffect
 from PySide6.QtGui import QColor
 
 
 class CardWidget(QFrame):
     """Modern card widget with qt-material base and custom styling."""
 
-    def __init__(
-        self,
-        title: str,
-        description: str,
-        icon_text: str,
-        click_handler: Callable[[], None],
-    ):
+    def __init__(self, title: str, description: str, icon_text: str, click_handler: Callable[[], None]):
         super().__init__()
         self._title = title
         self._description = description
@@ -37,13 +25,14 @@ class CardWidget(QFrame):
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(32, 32, 32, 32)
-        layout.setSpacing(20)
+        layout.setSpacing(16)
         layout.setAlignment(Qt.AlignmentFlag.AlignTop)
 
         # Icon
         icon_label = QLabel(self._icon_text)
         icon_label.setObjectName("cardIcon")
         icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        icon_label.setFixedHeight(56)
         layout.addWidget(icon_label)
 
         # Title
@@ -78,6 +67,7 @@ class CardWidget(QFrame):
             QLabel#cardIcon {
                 font-size: 48px;
                 color: #007bff;
+                line-height: 1;
             }
             
             QLabel#cardTitle {
@@ -108,16 +98,16 @@ class CardWidget(QFrame):
 
     def enterEvent(self, event):
         """Enhanced shadow on hover."""
-        if self.graphicsEffect():
-            shadow = self.graphicsEffect()
-            shadow.setBlurRadius(30)
-            shadow.setOffset(0, 8)
+        effect = self.graphicsEffect()
+        if isinstance(effect, QGraphicsDropShadowEffect):
+            effect.setBlurRadius(30)
+            effect.setOffset(0, 8)
         super().enterEvent(event)
 
     def leaveEvent(self, event):
         """Restore shadow on leave."""
-        if self.graphicsEffect():
-            shadow = self.graphicsEffect()
-            shadow.setBlurRadius(20)
-            shadow.setOffset(0, 4)
+        effect = self.graphicsEffect()
+        if isinstance(effect, QGraphicsDropShadowEffect):
+            effect.setBlurRadius(20)
+            effect.setOffset(0, 4)
         super().leaveEvent(event)

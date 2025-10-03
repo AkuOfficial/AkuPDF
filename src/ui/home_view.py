@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGridLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGridLayout, QScrollArea
 
 from src.ui.widgets.card import CardWidget
 
@@ -21,13 +21,13 @@ class HomeView(QWidget):
 
         # Welcome section
         welcome_section = self._create_welcome_section()
-        layout.addWidget(welcome_section)
+        layout.addWidget(welcome_section, 0, Qt.AlignmentFlag.AlignTop)
 
         # Feature cards grid
         cards_container = self._create_cards_grid()
-        layout.addWidget(cards_container, 1)
+        layout.addWidget(cards_container, 0, Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
 
-        layout.addStretch()
+        layout.addStretch(1)
 
     def _create_welcome_section(self):
         """Create the welcome section."""
@@ -52,9 +52,9 @@ class HomeView(QWidget):
     def _create_cards_grid(self):
         """Create a grid layout with feature cards."""
         container = QWidget()
+        container.setMaximumWidth(600)
         grid = QGridLayout(container)
         grid.setSpacing(24)
-        grid.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignHCenter)
 
         # Feature cards
         merge_card = CardWidget(

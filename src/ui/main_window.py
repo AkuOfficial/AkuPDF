@@ -25,8 +25,8 @@ class MainWindow(QMainWindow):
     def _setup_window(self):
         """Initialize window properties."""
         self.setWindowTitle("AkuPDF")
-        self.setMinimumSize(1200, 800)
-        self.resize(1400, 900)
+        self.setMinimumSize(900, 600)
+        self.resize(1200, 800)
 
     def _setup_ui(self):
         """Set up the main UI with sidebar navigation."""
