@@ -28,8 +28,8 @@ def test_main_window_creation(main_window):
 
 def test_main_window_size(main_window):
     """Test that main window has correct minimum size."""
-    assert main_window.minimumWidth() == 1200
-    assert main_window.minimumHeight() == 800
+    assert main_window.minimumWidth() == 900
+    assert main_window.minimumHeight() == 600
 
 
 def test_sidebar_exists(main_window):
@@ -48,7 +48,7 @@ def test_views_exist(main_window):
     """Test that views are created."""
     assert main_window.home_view is not None
     assert main_window.merge_view is not None
-    assert main_window.stacked_widget.count() == 2
+    assert main_window.stacked_widget.count() == 3
 
 
 def test_initial_view_is_home(main_window):

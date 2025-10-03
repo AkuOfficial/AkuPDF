@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGridLayout, QScrollArea
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QGridLayout
 
 from src.ui.widgets.card import CardWidget
 
@@ -7,9 +7,10 @@ from src.ui.widgets.card import CardWidget
 class HomeView(QWidget):
     """Modern home view with custom styling over qt-material base."""
 
-    def __init__(self, parent=None, on_merge_click=None):
+    def __init__(self, parent=None, on_merge_click=None, on_split_click=None):
         super().__init__(parent)
         self._on_merge_click = on_merge_click
+        self._on_split_click = on_split_click
         self._setup_ui()
         self._apply_styles()
 
@@ -69,7 +70,7 @@ class HomeView(QWidget):
             "Split PDFs",
             "Extract specific pages or split documents into separate files",
             "✂️",
-            lambda: None,
+            self._on_split_click,
         )
         grid.addWidget(split_card, 0, 1)
 

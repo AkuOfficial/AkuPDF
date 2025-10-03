@@ -1,5 +1,5 @@
 import os
-from pypdf import PdfWriter
+from pypdf import PdfWriter, PdfReader
 
 
 class Merger:
@@ -20,6 +20,18 @@ class Merger:
             raise FileExistsError(f"Output file already exists: {output_file}")
 
         for pdf in input_files:
-            self.engine.append(pdf)
+            if not pdf.lower().endswith('.pdf'):
+                raise ValueError(f"Invalid file type: {pdf}. Only PDF files are supported.")
+            
+            if not os.path.exists(pdf):
+                raise FileNotFoundError(f"File not found: {pdf}")
+            
+            try:
+                # Try to read and append with non-strict mode for better compatibility
+                reader = PdfReader(pdf, strict=False)
+                for page in reader.pages:
+                    self.engine.add_page(page)
+            except Exception as e:
+                raise ValueError(f"Cannot process PDF file: {pdf}. Error: {str(e)}")
 
         self.engine.write(output_file)

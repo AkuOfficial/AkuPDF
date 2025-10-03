@@ -10,6 +10,7 @@ from PySide6.QtWidgets import (
     QListWidgetItem,
     QMessageBox,
 )
+from PySide6.QtCore import Qt
 from src.modules.merge import Merger
 import os
 
@@ -74,12 +75,23 @@ class MergeView(QWidget):
         self.file_list = QListWidget()
         self.file_list.setProperty("class", "file-list")
         self.file_list.setMinimumHeight(300)
+        self.file_list.setContextMenuPolicy(Qt.ContextMenuPolicy.CustomContextMenu)
+        self.file_list.customContextMenuRequested.connect(self._show_context_menu)
         layout.addWidget(self.file_list)
 
+        buttons_layout = QHBoxLayout()
+        
         add_btn = QPushButton("📁  Add PDF Files")
         add_btn.setProperty("class", "add-button")
         add_btn.clicked.connect(self.add_files)
-        layout.addWidget(add_btn)
+        buttons_layout.addWidget(add_btn)
+
+        remove_btn = QPushButton("Remove Selected")
+        remove_btn.setProperty("class", "secondary-button")
+        remove_btn.clicked.connect(self.remove_selected_file)
+        buttons_layout.addWidget(remove_btn)
+
+        layout.addLayout(buttons_layout)
 
         return container
 
@@ -115,6 +127,23 @@ class MergeView(QWidget):
                     item = QListWidgetItem(os.path.basename(file_path))
                     item.setToolTip(file_path)
                     self.file_list.addItem(item)
+
+    def remove_selected_file(self):
+        """Remove the selected file from the list."""
+        current_row = self.file_list.currentRow()
+        if current_row >= 0:
+            self.file_list.takeItem(current_row)
+            del self.files[current_row]
+
+    def _show_context_menu(self, position):
+        """Show context menu for file list."""
+        if self.file_list.itemAt(position):
+            from PySide6.QtWidgets import QMenu
+            menu = QMenu()
+            remove_action = menu.addAction("Remove")
+            action = menu.exec(self.file_list.mapToGlobal(position))
+            if action == remove_action:
+                self.remove_selected_file()
 
     def clear_files(self):
         """Clear all files from the list."""
