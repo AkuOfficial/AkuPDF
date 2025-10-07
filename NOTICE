@@ -1,7 +1,17 @@
-This application is licensed under the Apache License 2.0.
-See the LICENSE file for details.
+===============================================================================
+AkuPDF
+Copyright (c) 2025 AkuOfficial. All rights reserved.
+===============================================================================
 
-Third-party components:
+This software is licensed under the AkuPDF Proprietary License.
+See the LICENSE file for full terms and conditions.
+
+-------------------------------------------------------------------------------
+Third-Party Components
+-------------------------------------------------------------------------------
+
+This software includes third-party libraries. Each component is licensed
+by its respective authors under the terms listed below.
 
 - PySide6
   Licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0-only)
@@ -23,14 +33,18 @@ Third-party components:
 - pytest
   Licensed under the MIT License.
   See licenses/MIT-pytest.txt for details.
-  (Only used for testing, not required at runtime.)
+  (Used for testing purposes only; not included in distributed binaries.)
 
 - ruff
   Licensed under the MIT License.
   See licenses/MIT-ruff.txt for details.
-  (Only used for development, not required at runtime.)
+  (Used for development only; not required at runtime.)
 
 - ty
   Licensed under the MIT License.
   See licenses/MIT-ty.txt for details.
-  (Only used for development, not required at runtime.)
+  (Used for development only; not required at runtime.)
+
+-------------------------------------------------------------------------------
+End of NOTICE file
+-------------------------------------------------------------------------------
