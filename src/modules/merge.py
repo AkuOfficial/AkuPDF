@@ -16,9 +16,6 @@ class Merger:
         if not input_files:
             raise ValueError("No input files provided for merging")
 
-        if os.path.exists(output_file):
-            raise FileExistsError(f"Output file already exists: {output_file}")
-
         for pdf in input_files:
             if not pdf.lower().endswith('.pdf'):
                 raise ValueError(f"Invalid file type: {pdf}. Only PDF files are supported.")
@@ -32,6 +29,6 @@ class Merger:
                 for page in reader.pages:
                     self.engine.add_page(page)
             except Exception as e:
-                raise ValueError(f"Cannot process PDF file: {pdf}. Error: {str(e)}")
+                raise ValueError(f"Cannot process PDF file: {pdf}. Error: {str(e)}") from e
 
         self.engine.write(output_file)

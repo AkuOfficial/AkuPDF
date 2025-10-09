@@ -28,8 +28,8 @@ def test_main_window_creation(main_window):
 
 def test_main_window_size(main_window):
     """Test that main window has correct minimum size."""
-    assert main_window.minimumWidth() == 900
-    assert main_window.minimumHeight() == 600
+    assert main_window.minimumWidth() == 950
+    assert main_window.minimumHeight() == 650
 
 
 def test_sidebar_exists(main_window):
@@ -43,6 +43,7 @@ def test_navigation_buttons_exist(main_window):
     assert main_window.home_btn is not None
     assert main_window.merge_btn is not None
     assert main_window.split_btn is not None
+    assert main_window.extract_btn is not None
 
 
 def test_views_exist(main_window):
@@ -50,7 +51,8 @@ def test_views_exist(main_window):
     assert main_window.home_view is not None
     assert main_window.merge_view is not None
     assert main_window.split_view is not None
-    assert main_window.stacked_widget.count() == 3
+    assert main_window.extract_view is not None
+    assert main_window.stacked_widget.count() == 4
 
 
 def test_initial_view_is_home(main_window):
@@ -70,6 +72,12 @@ def test_switch_to_split_view(main_window):
     assert main_window.stacked_widget.currentIndex() == 2
 
 
+def test_switch_to_extract_view(main_window):
+    """Test switching to extract view."""
+    main_window._switch_view(3, main_window.extract_btn)
+    assert main_window.stacked_widget.currentIndex() == 3
+
+
 def test_switch_back_to_home(main_window):
     """Test switching back to home view."""
     main_window._switch_view(1, main_window.merge_btn)
@@ -80,6 +88,7 @@ def test_switch_back_to_home(main_window):
 def test_navigation_button_active_state(main_window):
     """Test that active button state is updated correctly."""
     main_window._switch_view(1, main_window.merge_btn)
-    assert main_window.merge_btn.property("active") == True
-    assert main_window.home_btn.property("active") == False
-    assert main_window.split_btn.property("active") == False
+    assert main_window.merge_btn.property("active")
+    assert not main_window.home_btn.property("active")
+    assert not main_window.split_btn.property("active")
+    assert not main_window.extract_btn.property("active")

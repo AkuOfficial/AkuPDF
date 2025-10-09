@@ -5,7 +5,7 @@ from PySide6.QtGui import QColor
 
 
 class CardWidget(QFrame):
-    """Modern card widget with qt-material base and custom styling."""
+    """Futuristic card widget with neon glow effects."""
 
     def __init__(self, title: str, description: str, icon_text: str, click_handler: Callable[[], None]):
         super().__init__()
@@ -15,13 +15,14 @@ class CardWidget(QFrame):
         self._click_handler = click_handler
 
         self._setup_ui()
-        self._setup_shadow()
+        self._setup_glow()
 
     def _setup_ui(self):
         """Initialize the card's UI components."""
-        self.setFixedSize(280, 200)
+        self.setMinimumSize(200, 180)
+        self.setMaximumSize(280, 200)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.setSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(32, 32, 32, 32)
@@ -32,7 +33,6 @@ class CardWidget(QFrame):
         icon_label = QLabel(self._icon_text)
         icon_label.setObjectName("cardIcon")
         icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        icon_label.setFixedHeight(56)
         layout.addWidget(icon_label)
 
         # Title
@@ -51,44 +51,47 @@ class CardWidget(QFrame):
 
         layout.addStretch()
 
-        # Apply custom card styling
+        # Apply futuristic card styling
         self.setStyleSheet("""
             CardWidget {
-                background: white;
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 rgba(26, 31, 58, 0.8), stop:1 rgba(15, 23, 41, 0.8));
+                border: 2px solid rgba(0, 217, 255, 0.3);
                 border-radius: 16px;
-                border: 1px solid #e9ecef;
             }
             
             CardWidget:hover {
-                border-color: #007bff;
-                background: #f8f9ff;
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 rgba(0, 217, 255, 0.15), stop:1 rgba(123, 44, 191, 0.15));
+                border-color: #00d9ff;
             }
             
             QLabel#cardIcon {
                 font-size: 48px;
-                color: #007bff;
-                line-height: 1;
+                color: #00d9ff;
             }
             
             QLabel#cardTitle {
                 font-size: 18px;
-                font-weight: 600;
-                color: #212529;
+                font-weight: 700;
+                color: #00d9ff;
+                letter-spacing: 2px;
             }
             
             QLabel#cardDescription {
-                font-size: 14px;
-                color: #6c757d;
+                font-size: 12px;
+                color: #8892b0;
+                letter-spacing: 1px;
             }
         """)
 
-    def _setup_shadow(self):
-        """Add drop shadow effect."""
-        shadow = QGraphicsDropShadowEffect()
-        shadow.setBlurRadius(20)
-        shadow.setColor(QColor(0, 0, 0, 30))
-        shadow.setOffset(0, 4)
-        self.setGraphicsEffect(shadow)
+    def _setup_glow(self):
+        """Add neon glow effect."""
+        glow = QGraphicsDropShadowEffect()
+        glow.setBlurRadius(30)
+        glow.setColor(QColor(0, 217, 255, 80))
+        glow.setOffset(0, 0)
+        self.setGraphicsEffect(glow)
 
     def mousePressEvent(self, event):
         """Handle mouse press events."""
@@ -97,17 +100,17 @@ class CardWidget(QFrame):
         super().mousePressEvent(event)
 
     def enterEvent(self, event):
-        """Enhanced shadow on hover."""
+        """Enhanced glow on hover."""
         effect = self.graphicsEffect()
         if isinstance(effect, QGraphicsDropShadowEffect):
-            effect.setBlurRadius(30)
-            effect.setOffset(0, 8)
+            effect.setBlurRadius(40)
+            effect.setColor(QColor(0, 217, 255, 120))
         super().enterEvent(event)
 
     def leaveEvent(self, event):
-        """Restore shadow on leave."""
+        """Restore glow on leave."""
         effect = self.graphicsEffect()
         if isinstance(effect, QGraphicsDropShadowEffect):
-            effect.setBlurRadius(20)
-            effect.setOffset(0, 4)
+            effect.setBlurRadius(30)
+            effect.setColor(QColor(0, 217, 255, 80))
         super().leaveEvent(event)

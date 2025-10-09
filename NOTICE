@@ -35,6 +35,11 @@ by its respective authors under the terms listed below.
   See licenses/MIT-pytest.txt for details.
   (Used for testing purposes only; not included in distributed binaries.)
 
+- pytest-qt
+  Licensed under the MIT License.
+  See licenses/MIT-pytest-qt.txt for details.
+  (Used for testing purposes only; not included in distributed binaries.)
+
 - ruff
   Licensed under the MIT License.
   See licenses/MIT-ruff.txt for details.
@@ -44,6 +49,10 @@ by its respective authors under the terms listed below.
   Licensed under the MIT License.
   See licenses/MIT-ty.txt for details.
   (Used for development only; not required at runtime.)
+
+- just
+  Licensed under CC0 1.0 Universal (Public Domain Dedication).
+  A copy of the license is provided in `licenses/CC0-1.0-just.txt`.
 
 -------------------------------------------------------------------------------
 End of NOTICE file

@@ -5,12 +5,13 @@ from src.ui.widgets.card import CardWidget
 
 
 class HomeView(QWidget):
-    """Modern home view with custom styling over qt-material base."""
+    """Futuristic home view."""
 
-    def __init__(self, parent=None, on_merge_click=None, on_split_click=None):
+    def __init__(self, parent=None, on_merge_click=None, on_split_click=None, on_extract_click=None):
         super().__init__(parent)
         self._on_merge_click = on_merge_click
         self._on_split_click = on_split_click
+        self._on_extract_click = on_extract_click
         self._setup_ui()
         self._apply_styles()
 
@@ -37,13 +38,11 @@ class HomeView(QWidget):
         layout.setContentsMargins(0, 0, 0, 0)
         layout.setSpacing(12)
 
-        title = QLabel("Welcome to AkuPDF")
+        title = QLabel("AKUPDF SUITE")
         title.setObjectName("welcomeTitle")
         layout.addWidget(title)
 
-        subtitle = QLabel(
-            "Your complete PDF toolkit for merging, splitting, and managing documents"
-        )
+        subtitle = QLabel("NEXT-GENERATION PDF PROCESSING")
         subtitle.setObjectName("welcomeSubtitle")
         subtitle.setWordWrap(True)
         layout.addWidget(subtitle)
@@ -56,35 +55,37 @@ class HomeView(QWidget):
         container.setMaximumWidth(600)
         grid = QGridLayout(container)
         grid.setSpacing(24)
+        grid.setColumnStretch(0, 1)
+        grid.setColumnStretch(1, 1)
 
         # Feature cards
         merge_card = CardWidget(
-            "Merge PDFs",
-            "Combine multiple PDF files into a single document with ease",
+            "MERGE",
+            "Combine multiple PDF files",
             "📄",
             self._on_merge_click,
         )
         grid.addWidget(merge_card, 0, 0)
 
         split_card = CardWidget(
-            "Split PDFs",
-            "Extract specific pages or split documents into separate files",
+            "SPLIT",
+            "Extract and separate pages",
             "✂️",
             self._on_split_click,
         )
         grid.addWidget(split_card, 0, 1)
 
         extract_card = CardWidget(
-            "Extract Text",
-            "Extract and export text content from your PDF documents",
-            "📝",
-            lambda: None,
+            "EXTRACT",
+            "Extract specific pages",
+            "📑",
+            self._on_extract_click,
         )
         grid.addWidget(extract_card, 1, 0)
 
         compress_card = CardWidget(
-            "Compress PDFs",
-            "Reduce file size while maintaining document quality",
+            "COMPRESS",
+            "Optimize file size",
             "🗜️",
             lambda: None,
         )
@@ -93,20 +94,23 @@ class HomeView(QWidget):
         return container
 
     def _apply_styles(self):
-        """Apply custom styles over qt-material base."""
+        """Apply futuristic styles."""
         self.setStyleSheet("""
             HomeView {
-                background: #f8f9fa;
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                    stop:0 #0a0e27, stop:1 #16213e);
             }
             
             QLabel#welcomeTitle {
-                font-size: 32px;
+                font-size: 36px;
                 font-weight: 700;
-                color: #212529;
+                color: #00d9ff;
+                letter-spacing: 4px;
             }
             
             QLabel#welcomeSubtitle {
-                font-size: 16px;
-                color: #6c757d;
+                font-size: 14px;
+                color: #8892b0;
+                letter-spacing: 2px;
             }
         """)

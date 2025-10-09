@@ -18,7 +18,8 @@ class HeaderWidget(QWidget):
         self._add_title(layout)
         self._add_subtitle(layout)
 
-    def _add_title(self, parent_layout):
+    @staticmethod
+    def _add_title(parent_layout):
         """Add title to the header."""
         title = QLabel("AkuPDF Tools")
         title.setStyleSheet("""
@@ -32,7 +33,8 @@ class HeaderWidget(QWidget):
         title.setAlignment(Qt.AlignmentFlag.AlignCenter)
         parent_layout.addWidget(title)
 
-    def _add_subtitle(self, parent_layout):
+    @staticmethod
+    def _add_subtitle(parent_layout):
         """Add subtitle to the header."""
         subheader = QLabel("Select an action to get started")
         subheader.setStyleSheet("""

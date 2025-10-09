@@ -16,6 +16,7 @@ def app():
 def merge_view(app):
     """Create MergeView instance for tests."""
     view = MergeView()
+    view.show()
     yield view
 
 
@@ -29,10 +30,10 @@ def test_merge_view_has_file_list(merge_view):
     assert merge_view.file_list is not None
 
 
-def test_merge_view_has_status_label(merge_view):
-    """Test that status label exists."""
-    assert merge_view.status_label is not None
-    assert merge_view.status_label.isHidden()
+def test_merge_view_has_status_container(merge_view):
+    """Test that status container exists."""
+    assert merge_view.status_container is not None
+    assert not merge_view.status_container.isVisible()
 
 
 def test_merge_view_has_buttons(merge_view):
@@ -44,9 +45,9 @@ def test_merge_view_has_buttons(merge_view):
 
 def test_buttons_disabled_initially(merge_view):
     """Test that buttons are disabled initially."""
-    assert merge_view.remove_btn.isEnabled() == False
-    assert merge_view.clear_btn.isEnabled() == False
-    assert merge_view.merge_btn.isEnabled() == False
+    assert not merge_view.remove_btn.isEnabled()
+    assert not merge_view.clear_btn.isEnabled()
+    assert not merge_view.merge_btn.isEnabled()
 
 
 def test_merge_view_initial_state(merge_view):
@@ -61,8 +62,8 @@ def test_clear_button_enabled_with_one_file(merge_view):
     merge_view.file_list.addItem("test1.pdf")
     merge_view._update_button_states()
     
-    assert merge_view.clear_btn.isEnabled() == True
-    assert merge_view.merge_btn.isEnabled() == False
+    assert merge_view.clear_btn.isEnabled()
+    assert not merge_view.merge_btn.isEnabled()
 
 
 def test_merge_button_enabled_with_two_files(merge_view):
@@ -72,8 +73,8 @@ def test_merge_button_enabled_with_two_files(merge_view):
     merge_view.file_list.addItem("test2.pdf")
     merge_view._update_button_states()
     
-    assert merge_view.clear_btn.isEnabled() == True
-    assert merge_view.merge_btn.isEnabled() == True
+    assert merge_view.clear_btn.isEnabled()
+    assert merge_view.merge_btn.isEnabled()
 
 
 def test_clear_files(merge_view):
@@ -86,8 +87,8 @@ def test_clear_files(merge_view):
     
     assert len(merge_view.files) == 0
     assert merge_view.file_list.count() == 0
-    assert merge_view.clear_btn.isEnabled() == False
-    assert merge_view.merge_btn.isEnabled() == False
+    assert not merge_view.clear_btn.isEnabled()
+    assert not merge_view.merge_btn.isEnabled()
 
 
 def test_remove_button_enabled_when_file_selected(merge_view):
@@ -99,7 +100,7 @@ def test_remove_button_enabled_when_file_selected(merge_view):
     merge_view.file_list.setCurrentRow(0)
     merge_view._update_remove_button_state()
     
-    assert merge_view.remove_btn.isEnabled() == True
+    assert merge_view.remove_btn.isEnabled()
 
 
 def test_remove_selected_file(merge_view):
@@ -120,18 +121,27 @@ def test_remove_selected_file(merge_view):
 
 def test_show_status_success(merge_view):
     """Test showing success status message."""
-    merge_view._show_status("Test success message", False)
+    merge_view._show_status("Test success message", "success")
     
-    assert not merge_view.status_label.isHidden()
+    assert merge_view.status_container.isVisible()
     assert "Test success message" in merge_view.status_label.text()
 
 
 def test_show_status_error(merge_view):
     """Test showing error status message."""
-    merge_view._show_status("Test error message", True)
+    merge_view._show_status("Test error message", "error")
     
-    assert not merge_view.status_label.isHidden()
+    assert merge_view.status_container.isVisible()
     assert "Test error message" in merge_view.status_label.text()
+
+
+def test_hide_status(merge_view):
+    """Test hiding status message."""
+    merge_view._show_status("Test message", "info")
+    assert merge_view.status_container.isVisible()
+    
+    merge_view._hide_status()
+    assert not merge_view.status_container.isVisible()
 
 
 def test_back_callback(app):

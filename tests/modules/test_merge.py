@@ -97,9 +97,10 @@ class TestMerger:
         with open(test_data_dir / "sample.pdf", "rb") as f_in, open(orig, "wb") as f_out:
             f_out.write(f_in.read())
 
+        # Should now allow overwriting
         with Merger() as merger:
-            with pytest.raises(FileExistsError):
-                merger.process([str(orig)], str(orig))
+            merger.process([str(test_data_dir / "sample.pdf")], str(orig))
+        assert orig.exists()
 
     def test_mixed_content(self, tmp_output, test_data_dir):
         files = [

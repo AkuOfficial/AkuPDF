@@ -46,3 +46,14 @@ def test_merge_click_callback(app):
 
     view = HomeView(on_merge_click=on_merge_click)
     assert view is not None
+
+
+def test_extract_click_callback(app):
+    """Test that extract click callback is set."""
+    callback_called = []
+
+    def on_extract_click():
+        callback_called.append(True)
+
+    view = HomeView(on_extract_click=on_extract_click)
+    assert view is not None
