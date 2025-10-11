@@ -1,6 +1,6 @@
 import pytest
 from pathlib import Path
-from src.ui.extract_view import ExtractView
+from src.ui.extract_pages_view import ExtractView
 from src.modules.pdf_utils import parse_page_numbers
 
 

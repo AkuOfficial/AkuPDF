@@ -7,11 +7,12 @@ from src.ui.widgets.card import CardWidget
 class HomeView(QWidget):
     """Futuristic home view."""
 
-    def __init__(self, parent=None, on_merge_click=None, on_split_click=None, on_extract_click=None):
+    def __init__(self, parent=None, on_merge_click=None, on_split_click=None, on_extract_click=None, on_text_extract_click=None):
         super().__init__(parent)
         self._on_merge_click = on_merge_click
         self._on_split_click = on_split_click
         self._on_extract_click = on_extract_click
+        self._on_text_extract_click = on_text_extract_click
         self._setup_ui()
         self._apply_styles()
 
@@ -83,13 +84,13 @@ class HomeView(QWidget):
         )
         grid.addWidget(extract_card, 1, 0)
 
-        compress_card = CardWidget(
-            "COMPRESS",
-            "Optimize file size",
-            "🗜️",
-            lambda: None,
+        text_extract_card = CardWidget(
+            "TEXT",
+            "Extract text content",
+            "📝",
+            self._on_text_extract_click,
         )
-        grid.addWidget(compress_card, 1, 1)
+        grid.addWidget(text_extract_card, 1, 1)
 
         return container
 

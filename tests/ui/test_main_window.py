@@ -44,6 +44,7 @@ def test_navigation_buttons_exist(main_window):
     assert main_window.merge_btn is not None
     assert main_window.split_btn is not None
     assert main_window.extract_btn is not None
+    assert main_window.text_extract_btn is not None
 
 
 def test_views_exist(main_window):
@@ -52,7 +53,8 @@ def test_views_exist(main_window):
     assert main_window.merge_view is not None
     assert main_window.split_view is not None
     assert main_window.extract_view is not None
-    assert main_window.stacked_widget.count() == 4
+    assert main_window.text_extract_view is not None
+    assert main_window.stacked_widget.count() == 5
 
 
 def test_initial_view_is_home(main_window):
@@ -78,6 +80,12 @@ def test_switch_to_extract_view(main_window):
     assert main_window.stacked_widget.currentIndex() == 3
 
 
+def test_switch_to_text_extract_view(main_window):
+    """Test switching to text extract view."""
+    main_window._switch_view(4, main_window.text_extract_btn)
+    assert main_window.stacked_widget.currentIndex() == 4
+
+
 def test_switch_back_to_home(main_window):
     """Test switching back to home view."""
     main_window._switch_view(1, main_window.merge_btn)
@@ -92,3 +100,4 @@ def test_navigation_button_active_state(main_window):
     assert not main_window.home_btn.property("active")
     assert not main_window.split_btn.property("active")
     assert not main_window.extract_btn.property("active")
+    assert not main_window.text_extract_btn.property("active")

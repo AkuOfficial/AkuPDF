@@ -12,7 +12,8 @@ from PySide6.QtWidgets import (
 from src.ui.home_view import HomeView
 from src.ui.merge_view import MergeView
 from src.ui.split_view import SplitView
-from src.ui.extract_view import ExtractView
+from src.ui.extract_pages_view import ExtractView
+from src.ui.text_extract_view import TextExtractView
 
 
 class MainWindow(QMainWindow):
@@ -83,8 +84,9 @@ class MainWindow(QMainWindow):
         self.merge_btn = QPushButton("📄  Merge PDFs")
         self.split_btn = QPushButton("✂️  Split PDFs")
         self.extract_btn = QPushButton("📑  Extract Pages")
+        self.text_extract_btn = QPushButton("📝  Extract Text")
 
-        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn]:
+        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.text_extract_btn]:
             btn.setProperty("class", "nav-button")
 
         self.home_btn.setProperty("active", True)
@@ -92,11 +94,13 @@ class MainWindow(QMainWindow):
         self.merge_btn.clicked.connect(lambda: self._switch_view(1, self.merge_btn))
         self.split_btn.clicked.connect(lambda: self._switch_view(2, self.split_btn))
         self.extract_btn.clicked.connect(lambda: self._switch_view(3, self.extract_btn))
+        self.text_extract_btn.clicked.connect(lambda: self._switch_view(4, self.text_extract_btn))
 
         nav_layout.addWidget(self.home_btn)
         nav_layout.addWidget(self.merge_btn)
         nav_layout.addWidget(self.split_btn)
         nav_layout.addWidget(self.extract_btn)
+        nav_layout.addWidget(self.text_extract_btn)
         nav_layout.addStretch()
 
         layout.addWidget(nav_container, 1)
@@ -109,7 +113,8 @@ class MainWindow(QMainWindow):
             self,
             on_merge_click=lambda: self._switch_view(1, self.merge_btn),
             on_split_click=lambda: self._switch_view(2, self.split_btn),
-            on_extract_click=lambda: self._switch_view(3, self.extract_btn)
+            on_extract_click=lambda: self._switch_view(3, self.extract_btn),
+            on_text_extract_click=lambda: self._switch_view(4, self.text_extract_btn)
         )
         self.merge_view = MergeView(
             on_back_click=lambda: self._switch_view(0, self.home_btn)
@@ -120,18 +125,22 @@ class MainWindow(QMainWindow):
         self.extract_view = ExtractView(
             on_back_click=lambda: self._switch_view(0, self.home_btn)
         )
+        self.text_extract_view = TextExtractView(
+            on_back_click=lambda: self._switch_view(0, self.home_btn)
+        )
 
         self.stacked_widget.addWidget(self.home_view)
         self.stacked_widget.addWidget(self.merge_view)
         self.stacked_widget.addWidget(self.split_view)
         self.stacked_widget.addWidget(self.extract_view)
+        self.stacked_widget.addWidget(self.text_extract_view)
 
     def _switch_view(self, index, button):
         """Switch to a different view and update navigation."""
         self.stacked_widget.setCurrentIndex(index)
 
         # Update button states
-        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn]:
+        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.text_extract_btn]:
             btn.setProperty("active", btn == button)
             btn.style().unpolish(btn)
             btn.style().polish(btn)
