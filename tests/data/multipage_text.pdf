@@ -1,0 +1,551 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<<
+/Producer (pypdf)
+>>
+endobj
+2 0 obj
+<<
+/Type /Pages
+/Count 6
+/Kids [ 4 0 R 7 0 R 10 0 R 13 0 R 16 0 R 19 0 R ]
+>>
+endobj
+3 0 obj
+<<
+/Type /Catalog
+/Pages 2 0 R
+>>
+endobj
+4 0 obj
+<<
+/Type /Page
+/Resources 5 0 R
+/MediaBox [ 0 0 612 792 ]
+/Contents 6 0 R
+/Parent 2 0 R
+>>
+endobj
+5 0 obj
+<<
+/Font <<
+/F1 <<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+>>
+>>
+endobj
+6 0 obj
+<<
+/Length 1978
+>>
+stream
+
+BT
+/F1 24 Tf
+50 750 Td
+(Page 1 - AkuPDF Test Document) Tj
+ET
+BT
+/F1 12 Tf
+50 700 Td
+(This is a multi-page test document created for testing text extraction.) Tj
+0 -20 Td
+(It contains multiple paragraphs of text on each page.) Tj
+0 -30 Td
+(Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod) Tj
+0 -15 Td
+(tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,) Tj
+0 -15 Td
+(quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo) Tj
+0 -15 Td
+(consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse) Tj
+0 -15 Td
+(cillum dolore eu fugiat nulla pariatur.) Tj
+0 -30 Td
+(Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia) Tj
+0 -15 Td
+(deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste) Tj
+0 -15 Td
+(natus error sit voluptatem accusantium doloremque laudantium, totam rem) Tj
+0 -15 Td
+(aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto) Tj
+0 -15 Td
+(beatae vitae dicta sunt explicabo.) Tj
+0 -30 Td
+(Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,) Tj
+0 -15 Td
+(sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.) Tj
+0 -15 Td
+(Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,) Tj
+0 -15 Td
+(adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et) Tj
+0 -15 Td
+(dolore magnam aliquam quaerat voluptatem.) Tj
+0 -30 Td
+(At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis) Tj
+0 -15 Td
+(praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias) Tj
+0 -15 Td
+(excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui) Tj
+0 -15 Td
+(officia deserunt mollitia animi, id est laborum et dolorum fuga.) Tj
+0 -30 Td
+(Page 1 contains this rich text content for comprehensive testing.) Tj
+0 -15 Td
+(The text extraction feature should be able to extract all of this content.) Tj
+ET
+
+endstream
+endobj
+7 0 obj
+<<
+/Type /Page
+/Resources 8 0 R
+/MediaBox [ 0 0 612 792 ]
+/Contents 9 0 R
+/Parent 2 0 R
+>>
+endobj
+8 0 obj
+<<
+/Font <<
+/F1 <<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+>>
+>>
+endobj
+9 0 obj
+<<
+/Length 1978
+>>
+stream
+
+BT
+/F1 24 Tf
+50 750 Td
+(Page 2 - AkuPDF Test Document) Tj
+ET
+BT
+/F1 12 Tf
+50 700 Td
+(This is a multi-page test document created for testing text extraction.) Tj
+0 -20 Td
+(It contains multiple paragraphs of text on each page.) Tj
+0 -30 Td
+(Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod) Tj
+0 -15 Td
+(tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,) Tj
+0 -15 Td
+(quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo) Tj
+0 -15 Td
+(consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse) Tj
+0 -15 Td
+(cillum dolore eu fugiat nulla pariatur.) Tj
+0 -30 Td
+(Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia) Tj
+0 -15 Td
+(deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste) Tj
+0 -15 Td
+(natus error sit voluptatem accusantium doloremque laudantium, totam rem) Tj
+0 -15 Td
+(aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto) Tj
+0 -15 Td
+(beatae vitae dicta sunt explicabo.) Tj
+0 -30 Td
+(Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,) Tj
+0 -15 Td
+(sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.) Tj
+0 -15 Td
+(Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,) Tj
+0 -15 Td
+(adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et) Tj
+0 -15 Td
+(dolore magnam aliquam quaerat voluptatem.) Tj
+0 -30 Td
+(At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis) Tj
+0 -15 Td
+(praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias) Tj
+0 -15 Td
+(excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui) Tj
+0 -15 Td
+(officia deserunt mollitia animi, id est laborum et dolorum fuga.) Tj
+0 -30 Td
+(Page 2 contains this rich text content for comprehensive testing.) Tj
+0 -15 Td
+(The text extraction feature should be able to extract all of this content.) Tj
+ET
+
+endstream
+endobj
+10 0 obj
+<<
+/Type /Page
+/Resources 11 0 R
+/MediaBox [ 0 0 612 792 ]
+/Contents 12 0 R
+/Parent 2 0 R
+>>
+endobj
+11 0 obj
+<<
+/Font <<
+/F1 <<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+>>
+>>
+endobj
+12 0 obj
+<<
+/Length 1978
+>>
+stream
+
+BT
+/F1 24 Tf
+50 750 Td
+(Page 3 - AkuPDF Test Document) Tj
+ET
+BT
+/F1 12 Tf
+50 700 Td
+(This is a multi-page test document created for testing text extraction.) Tj
+0 -20 Td
+(It contains multiple paragraphs of text on each page.) Tj
+0 -30 Td
+(Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod) Tj
+0 -15 Td
+(tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,) Tj
+0 -15 Td
+(quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo) Tj
+0 -15 Td
+(consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse) Tj
+0 -15 Td
+(cillum dolore eu fugiat nulla pariatur.) Tj
+0 -30 Td
+(Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia) Tj
+0 -15 Td
+(deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste) Tj
+0 -15 Td
+(natus error sit voluptatem accusantium doloremque laudantium, totam rem) Tj
+0 -15 Td
+(aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto) Tj
+0 -15 Td
+(beatae vitae dicta sunt explicabo.) Tj
+0 -30 Td
+(Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,) Tj
+0 -15 Td
+(sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.) Tj
+0 -15 Td
+(Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,) Tj
+0 -15 Td
+(adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et) Tj
+0 -15 Td
+(dolore magnam aliquam quaerat voluptatem.) Tj
+0 -30 Td
+(At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis) Tj
+0 -15 Td
+(praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias) Tj
+0 -15 Td
+(excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui) Tj
+0 -15 Td
+(officia deserunt mollitia animi, id est laborum et dolorum fuga.) Tj
+0 -30 Td
+(Page 3 contains this rich text content for comprehensive testing.) Tj
+0 -15 Td
+(The text extraction feature should be able to extract all of this content.) Tj
+ET
+
+endstream
+endobj
+13 0 obj
+<<
+/Type /Page
+/Resources 14 0 R
+/MediaBox [ 0 0 612 792 ]
+/Contents 15 0 R
+/Parent 2 0 R
+>>
+endobj
+14 0 obj
+<<
+/Font <<
+/F1 <<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+>>
+>>
+endobj
+15 0 obj
+<<
+/Length 1978
+>>
+stream
+
+BT
+/F1 24 Tf
+50 750 Td
+(Page 4 - AkuPDF Test Document) Tj
+ET
+BT
+/F1 12 Tf
+50 700 Td
+(This is a multi-page test document created for testing text extraction.) Tj
+0 -20 Td
+(It contains multiple paragraphs of text on each page.) Tj
+0 -30 Td
+(Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod) Tj
+0 -15 Td
+(tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,) Tj
+0 -15 Td
+(quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo) Tj
+0 -15 Td
+(consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse) Tj
+0 -15 Td
+(cillum dolore eu fugiat nulla pariatur.) Tj
+0 -30 Td
+(Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia) Tj
+0 -15 Td
+(deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste) Tj
+0 -15 Td
+(natus error sit voluptatem accusantium doloremque laudantium, totam rem) Tj
+0 -15 Td
+(aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto) Tj
+0 -15 Td
+(beatae vitae dicta sunt explicabo.) Tj
+0 -30 Td
+(Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,) Tj
+0 -15 Td
+(sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.) Tj
+0 -15 Td
+(Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,) Tj
+0 -15 Td
+(adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et) Tj
+0 -15 Td
+(dolore magnam aliquam quaerat voluptatem.) Tj
+0 -30 Td
+(At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis) Tj
+0 -15 Td
+(praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias) Tj
+0 -15 Td
+(excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui) Tj
+0 -15 Td
+(officia deserunt mollitia animi, id est laborum et dolorum fuga.) Tj
+0 -30 Td
+(Page 4 contains this rich text content for comprehensive testing.) Tj
+0 -15 Td
+(The text extraction feature should be able to extract all of this content.) Tj
+ET
+
+endstream
+endobj
+16 0 obj
+<<
+/Type /Page
+/Resources 17 0 R
+/MediaBox [ 0 0 612 792 ]
+/Contents 18 0 R
+/Parent 2 0 R
+>>
+endobj
+17 0 obj
+<<
+/Font <<
+/F1 <<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+>>
+>>
+endobj
+18 0 obj
+<<
+/Length 1978
+>>
+stream
+
+BT
+/F1 24 Tf
+50 750 Td
+(Page 5 - AkuPDF Test Document) Tj
+ET
+BT
+/F1 12 Tf
+50 700 Td
+(This is a multi-page test document created for testing text extraction.) Tj
+0 -20 Td
+(It contains multiple paragraphs of text on each page.) Tj
+0 -30 Td
+(Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod) Tj
+0 -15 Td
+(tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,) Tj
+0 -15 Td
+(quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo) Tj
+0 -15 Td
+(consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse) Tj
+0 -15 Td
+(cillum dolore eu fugiat nulla pariatur.) Tj
+0 -30 Td
+(Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia) Tj
+0 -15 Td
+(deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste) Tj
+0 -15 Td
+(natus error sit voluptatem accusantium doloremque laudantium, totam rem) Tj
+0 -15 Td
+(aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto) Tj
+0 -15 Td
+(beatae vitae dicta sunt explicabo.) Tj
+0 -30 Td
+(Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,) Tj
+0 -15 Td
+(sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.) Tj
+0 -15 Td
+(Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,) Tj
+0 -15 Td
+(adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et) Tj
+0 -15 Td
+(dolore magnam aliquam quaerat voluptatem.) Tj
+0 -30 Td
+(At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis) Tj
+0 -15 Td
+(praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias) Tj
+0 -15 Td
+(excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui) Tj
+0 -15 Td
+(officia deserunt mollitia animi, id est laborum et dolorum fuga.) Tj
+0 -30 Td
+(Page 5 contains this rich text content for comprehensive testing.) Tj
+0 -15 Td
+(The text extraction feature should be able to extract all of this content.) Tj
+ET
+
+endstream
+endobj
+19 0 obj
+<<
+/Type /Page
+/Resources 20 0 R
+/MediaBox [ 0 0 612 792 ]
+/Contents 21 0 R
+/Parent 2 0 R
+>>
+endobj
+20 0 obj
+<<
+/Font <<
+/F1 <<
+/Type /Font
+/Subtype /Type1
+/BaseFont /Helvetica
+>>
+>>
+>>
+endobj
+21 0 obj
+<<
+/Length 1978
+>>
+stream
+
+BT
+/F1 24 Tf
+50 750 Td
+(Page 6 - AkuPDF Test Document) Tj
+ET
+BT
+/F1 12 Tf
+50 700 Td
+(This is a multi-page test document created for testing text extraction.) Tj
+0 -20 Td
+(It contains multiple paragraphs of text on each page.) Tj
+0 -30 Td
+(Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod) Tj
+0 -15 Td
+(tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,) Tj
+0 -15 Td
+(quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo) Tj
+0 -15 Td
+(consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse) Tj
+0 -15 Td
+(cillum dolore eu fugiat nulla pariatur.) Tj
+0 -30 Td
+(Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia) Tj
+0 -15 Td
+(deserunt mollit anim id est laborum. Sed ut perspiciatis unde omnis iste) Tj
+0 -15 Td
+(natus error sit voluptatem accusantium doloremque laudantium, totam rem) Tj
+0 -15 Td
+(aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto) Tj
+0 -15 Td
+(beatae vitae dicta sunt explicabo.) Tj
+0 -30 Td
+(Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit,) Tj
+0 -15 Td
+(sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.) Tj
+0 -15 Td
+(Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur,) Tj
+0 -15 Td
+(adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et) Tj
+0 -15 Td
+(dolore magnam aliquam quaerat voluptatem.) Tj
+0 -30 Td
+(At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis) Tj
+0 -15 Td
+(praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias) Tj
+0 -15 Td
+(excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui) Tj
+0 -15 Td
+(officia deserunt mollitia animi, id est laborum et dolorum fuga.) Tj
+0 -30 Td
+(Page 6 contains this rich text content for comprehensive testing.) Tj
+0 -15 Td
+(The text extraction feature should be able to extract all of this content.) Tj
+ET
+
+endstream
+endobj
+xref
+0 22
+0000000000 65535 f 
+0000000015 00000 n 
+0000000054 00000 n 
+0000000147 00000 n 
+0000000196 00000 n 
+0000000302 00000 n 
+0000000394 00000 n 
+0000002424 00000 n 
+0000002530 00000 n 
+0000002622 00000 n 
+0000004652 00000 n 
+0000004761 00000 n 
+0000004854 00000 n 
+0000006885 00000 n 
+0000006994 00000 n 
+0000007087 00000 n 
+0000009118 00000 n 
+0000009227 00000 n 
+0000009320 00000 n 
+0000011351 00000 n 
+0000011460 00000 n 
+0000011553 00000 n 
+trailer
+<<
+/Size 22
+/Root 3 0 R
+/Info 1 0 R
+>>
+startxref
+13584
+%%EOF

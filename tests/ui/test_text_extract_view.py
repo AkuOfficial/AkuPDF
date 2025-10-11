@@ -105,3 +105,47 @@ def test_save_button_disabled_initially(qtbot):
     qtbot.addWidget(view)
     
     assert not view.save_btn.isEnabled()
+
+
+def test_page_selection_radio_buttons(qtbot):
+    """Test page selection radio buttons exist and work."""
+    view = TextExtractView()
+    qtbot.addWidget(view)
+    
+    assert view.all_pages_radio is not None
+    assert view.specific_pages_radio is not None
+    assert view.all_pages_radio.isChecked()
+    assert not view.specific_pages_radio.isChecked()
+
+
+def test_pages_input_disabled_by_default(qtbot):
+    """Test pages input is disabled when all pages is selected."""
+    view = TextExtractView()
+    qtbot.addWidget(view)
+    
+    assert not view.pages_input.isEnabled()
+
+
+def test_pages_input_enabled_when_specific_selected(qtbot, test_data_dir):
+    """Test pages input is enabled when specific pages is selected."""
+    view = TextExtractView()
+    qtbot.addWidget(view)
+    view.show()
+    
+    view._load_file(str(test_data_dir / "sample.pdf"))
+    view.specific_pages_radio.setChecked(True)
+    assert view.pages_input.isEnabled()
+
+
+def test_extract_without_page_numbers_when_specific_selected(qtbot, test_data_dir):
+    """Test extracting specific pages without entering page numbers."""
+    view = TextExtractView()
+    qtbot.addWidget(view)
+    view.show()
+    
+    view._load_file(str(test_data_dir / "multipage_text.pdf"))
+    view.specific_pages_radio.setChecked(True)
+    view.extract_text()
+    
+    assert view.status_container.isVisible()
+    assert "enter page numbers" in view.status_label.text().lower()
