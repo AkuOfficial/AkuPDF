@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from src.modules.split import Splitter
+from src.modules.pdf_utils import parse_page_numbers, get_pdf_info
 from src.ui.widgets.drop_zone import DropZone
 
 
@@ -174,47 +175,7 @@ class ExtractView(QWidget):
         """Hide status message."""
         self.status_container.hide()
 
-    @staticmethod
-    def _parse_page_numbers(text):
-        """Parse page numbers from text input (e.g., '1,3,5-7' -> [0,2,4,5,6])."""
-        pages = set()
-        try:
-            # Remove extra spaces and commas
-            text = text.strip()
-            # Replace multiple commas with single comma
-            while ',,' in text:
-                text = text.replace(',,', ',')
-            # Remove leading/trailing commas
-            text = text.strip(',')
-            
-            if not text:
-                return None
-            
-            for part in text.split(','):
-                part = part.strip()
-                if not part:
-                    continue
-                    
-                if '-' in part:
-                    range_parts = part.split('-')
-                    if len(range_parts) != 2:
-                        return None
-                    start, end = range_parts[0].strip(), range_parts[1].strip()
-                    if not start or not end:
-                        return None
-                    start, end = int(start), int(end)
-                    if start < 1 or end < 1 or start > end:
-                        return None
-                    pages.update(range(start - 1, end))
-                else:
-                    page_num = int(part)
-                    if page_num < 1:
-                        return None
-                    pages.add(page_num - 1)
-            
-            return sorted(pages) if pages else None
-        except (ValueError, AttributeError):
-            return None
+
 
     def _handle_dropped_file(self, files):
         """Handle file dropped into drop zone."""
@@ -228,9 +189,8 @@ class ExtractView(QWidget):
     def _load_file(self, file):
         """Load PDF file and update UI."""
         try:
-            from pypdf import PdfReader
-            reader = PdfReader(file, strict=False)
-            self.total_pages = len(reader.pages)
+            pdf_info = get_pdf_info(file)
+            self.total_pages = pdf_info['total_pages']
             
             if self.total_pages == 0:
                 self._show_status("⚠️ The selected PDF has no pages.", "error")
@@ -240,7 +200,6 @@ class ExtractView(QWidget):
             self.file_label.setText(file)
             self.page_info_label.setText(f"Total pages: {self.total_pages}")
             
-            # Hide drop zone, show file info, and enable options/actions
             self.drop_zone.hide()
             self.file_info_container.show()
             self.options_section.setEnabled(True)
@@ -282,7 +241,7 @@ class ExtractView(QWidget):
             self._show_status("⚠️ Please enter page numbers to extract.", "error")
             return
 
-        page_numbers = self._parse_page_numbers(page_text)
+        page_numbers = parse_page_numbers(page_text)
         if page_numbers is None:
             self._show_status("❌ Invalid page numbers format. Use format like: 1,3,5-7", "error")
             return

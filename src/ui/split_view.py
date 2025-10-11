@@ -4,6 +4,7 @@ from PySide6.QtWidgets import (
 )
 from PySide6.QtCore import Qt
 from src.modules.split import Splitter
+from src.modules.pdf_utils import get_pdf_info
 from src.ui.widgets.drop_zone import DropZone
 
 
@@ -219,9 +220,8 @@ class SplitView(QWidget):
     def _load_file(self, file):
         """Load PDF file and update UI."""
         try:
-            from pypdf import PdfReader
-            reader = PdfReader(file, strict=False)
-            self.total_pages = len(reader.pages)
+            pdf_info = get_pdf_info(file)
+            self.total_pages = pdf_info['total_pages']
             
             if self.total_pages == 0:
                 self._show_status("⚠️ The selected PDF has no pages and cannot be split.", "error")
@@ -231,12 +231,10 @@ class SplitView(QWidget):
             self.file_label.setText(file)
             self.page_info_label.setText(f"Total pages: {self.total_pages}")
             
-            # Update spinbox and slider maximum
             self.pages_spinbox.setMaximum(self.total_pages)
             self.pages_slider.setMaximum(self.total_pages)
             self.page_range_label.setText(f"(Max: {self.total_pages})")
             
-            # Hide drop zone, show file info, and enable options/actions
             self.drop_zone.hide()
             self.file_info_container.show()
             self.options_section.setEnabled(True)
