@@ -1,7 +1,6 @@
 import pytest
 from pathlib import Path
 from src.modules.text_extractor import TextExtractor
-import os
 
 
 @pytest.fixture

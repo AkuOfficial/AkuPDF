@@ -80,5 +80,5 @@ def test_get_pdf_info_multipage(test_data_dir):
 
 def test_get_pdf_info_invalid_file():
     """Test getting PDF info from non-existent file."""
-    with pytest.raises(Exception):
+    with pytest.raises(FileNotFoundError):
         get_pdf_info("nonexistent.pdf")
