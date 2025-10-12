@@ -30,6 +30,18 @@ by its respective authors under the terms listed below.
   Licensed under the Mozilla Public License 2.0 (MPL-2.0)
   A copy of the license is provided in licenses/MPL-2.0-pikepdf.txt.
 
+- Pillow
+  Licensed under the MIT-CMU License.
+  See licenses/MIT-CMU-Pillow.txt for details.
+
+- python-docx
+  Licensed under the MIT License.
+  See licenses/MIT-python-docx.txt for details.
+
+- openpyxl
+  Licensed under the MIT License.
+  See licenses/MIT-openpyxl.txt for details.
+
 - pytest
   Licensed under the MIT License.
   See licenses/MIT-pytest.txt for details.

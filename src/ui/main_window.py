@@ -18,6 +18,9 @@ from src.ui.extract_pages_view import ExtractView
 from src.ui.text_extract_view import TextExtractView
 from src.ui.image_extract_view import ImageExtractView
 from src.ui.compress_view import CompressView
+from src.ui.pdf_to_docx_view import PdfToDocxView
+from src.ui.pdf_to_xlsx_view import PdfToXlsxView
+from src.ui.pdf_to_images_view import PdfToImagesView
 
 
 class MainWindow(QMainWindow):
@@ -135,6 +138,27 @@ class MainWindow(QMainWindow):
         
         nav_layout.addWidget(self.text_extract_btn)
         nav_layout.addWidget(self.image_extract_btn)
+        
+        # Conversion Group
+        convert_label = QLabel("CONVERSION")
+        convert_label.setProperty("class", "nav-group-label")
+        nav_layout.addWidget(convert_label)
+        
+        self.docx_btn = QPushButton("📄  PDF to DOCX")
+        self.xlsx_btn = QPushButton("📊  PDF to XLSX")
+        self.images_btn = QPushButton("🖼️  PDF to Images")
+        
+        for btn in [self.docx_btn, self.xlsx_btn, self.images_btn]:
+            btn.setProperty("class", "nav-button")
+        
+        self.docx_btn.clicked.connect(lambda: self._switch_view(7, self.docx_btn))
+        self.xlsx_btn.clicked.connect(lambda: self._switch_view(8, self.xlsx_btn))
+        self.images_btn.clicked.connect(lambda: self._switch_view(9, self.images_btn))
+        
+        nav_layout.addWidget(self.docx_btn)
+        nav_layout.addWidget(self.xlsx_btn)
+        nav_layout.addWidget(self.images_btn)
+        
         nav_layout.addStretch()
 
         scroll_area.setWidget(nav_container)
@@ -170,6 +194,15 @@ class MainWindow(QMainWindow):
         self.compress_view = CompressView(
             on_back_click=lambda: self._switch_view(0, self.home_btn)
         )
+        self.docx_view = PdfToDocxView(
+            on_back_click=lambda: self._switch_view(0, self.home_btn)
+        )
+        self.xlsx_view = PdfToXlsxView(
+            on_back_click=lambda: self._switch_view(0, self.home_btn)
+        )
+        self.images_view = PdfToImagesView(
+            on_back_click=lambda: self._switch_view(0, self.home_btn)
+        )
 
         self.stacked_widget.addWidget(self.home_view)
         self.stacked_widget.addWidget(self.merge_view)
@@ -178,13 +211,16 @@ class MainWindow(QMainWindow):
         self.stacked_widget.addWidget(self.compress_view)
         self.stacked_widget.addWidget(self.text_extract_view)
         self.stacked_widget.addWidget(self.image_extract_view)
+        self.stacked_widget.addWidget(self.docx_view)
+        self.stacked_widget.addWidget(self.xlsx_view)
+        self.stacked_widget.addWidget(self.images_view)
 
     def _switch_view(self, index, button):
         """Switch to a different view and update navigation."""
         self.stacked_widget.setCurrentIndex(index)
 
         # Update button states
-        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.compress_btn, self.text_extract_btn, self.image_extract_btn]:
+        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.compress_btn, self.text_extract_btn, self.image_extract_btn, self.docx_btn, self.xlsx_btn, self.images_btn]:
             btn.setProperty("active", btn == button)
             btn.style().unpolish(btn)
             btn.style().polish(btn)
