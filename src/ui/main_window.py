@@ -7,13 +7,16 @@ from PySide6.QtWidgets import (
     QStackedWidget,
     QFrame,
     QLabel,
+    QScrollArea,
 )
+from PySide6.QtCore import Qt
 
 from src.ui.home_view import HomeView
 from src.ui.merge_view import MergeView
 from src.ui.split_view import SplitView
 from src.ui.extract_pages_view import ExtractView
 from src.ui.text_extract_view import TextExtractView
+from src.ui.image_extract_view import ImageExtractView
 
 
 class MainWindow(QMainWindow):
@@ -74,36 +77,64 @@ class MainWindow(QMainWindow):
 
         layout.addWidget(title_container)
 
-        # Navigation section
+        # Scrollable navigation section
+        scroll_area = QScrollArea()
+        scroll_area.setWidgetResizable(True)
+        scroll_area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        scroll_area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        scroll_area.setProperty("class", "sidebar-scroll")
+        
         nav_container = QWidget()
         nav_layout = QVBoxLayout(nav_container)
-        nav_layout.setContentsMargins(16, 24, 16, 0)
+        nav_layout.setContentsMargins(16, 24, 16, 16)
         nav_layout.setSpacing(8)
 
         self.home_btn = QPushButton("🏠  Home")
+        self.home_btn.setProperty("class", "nav-button")
+        self.home_btn.setProperty("active", True)
+        self.home_btn.clicked.connect(lambda: self._switch_view(0, self.home_btn))
+        nav_layout.addWidget(self.home_btn)
+        
+        # Basic Operations Group
+        basic_label = QLabel("BASIC OPERATIONS")
+        basic_label.setProperty("class", "nav-group-label")
+        nav_layout.addWidget(basic_label)
+        
         self.merge_btn = QPushButton("📄  Merge PDFs")
         self.split_btn = QPushButton("✂️  Split PDFs")
         self.extract_btn = QPushButton("📑  Extract Pages")
-        self.text_extract_btn = QPushButton("📝  Extract Text")
-
-        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.text_extract_btn]:
+        
+        for btn in [self.merge_btn, self.split_btn, self.extract_btn]:
             btn.setProperty("class", "nav-button")
-
-        self.home_btn.setProperty("active", True)
-        self.home_btn.clicked.connect(lambda: self._switch_view(0, self.home_btn))
+        
         self.merge_btn.clicked.connect(lambda: self._switch_view(1, self.merge_btn))
         self.split_btn.clicked.connect(lambda: self._switch_view(2, self.split_btn))
         self.extract_btn.clicked.connect(lambda: self._switch_view(3, self.extract_btn))
-        self.text_extract_btn.clicked.connect(lambda: self._switch_view(4, self.text_extract_btn))
-
-        nav_layout.addWidget(self.home_btn)
+        
         nav_layout.addWidget(self.merge_btn)
         nav_layout.addWidget(self.split_btn)
         nav_layout.addWidget(self.extract_btn)
+        
+        # Content Extraction Group
+        extract_label = QLabel("CONTENT EXTRACTION")
+        extract_label.setProperty("class", "nav-group-label")
+        nav_layout.addWidget(extract_label)
+        
+        self.text_extract_btn = QPushButton("📝  Extract Text")
+        self.image_extract_btn = QPushButton("🖼️  Extract Images")
+        
+        for btn in [self.text_extract_btn, self.image_extract_btn]:
+            btn.setProperty("class", "nav-button")
+        
+        self.text_extract_btn.clicked.connect(lambda: self._switch_view(4, self.text_extract_btn))
+        self.image_extract_btn.clicked.connect(lambda: self._switch_view(5, self.image_extract_btn))
+        
         nav_layout.addWidget(self.text_extract_btn)
+        nav_layout.addWidget(self.image_extract_btn)
         nav_layout.addStretch()
 
-        layout.addWidget(nav_container, 1)
+        scroll_area.setWidget(nav_container)
+        layout.addWidget(scroll_area, 1)
 
         return sidebar
 
@@ -114,7 +145,8 @@ class MainWindow(QMainWindow):
             on_merge_click=lambda: self._switch_view(1, self.merge_btn),
             on_split_click=lambda: self._switch_view(2, self.split_btn),
             on_extract_click=lambda: self._switch_view(3, self.extract_btn),
-            on_text_extract_click=lambda: self._switch_view(4, self.text_extract_btn)
+            on_text_extract_click=lambda: self._switch_view(4, self.text_extract_btn),
+            on_image_extract_click=lambda: self._switch_view(5, self.image_extract_btn)
         )
         self.merge_view = MergeView(
             on_back_click=lambda: self._switch_view(0, self.home_btn)
@@ -128,19 +160,23 @@ class MainWindow(QMainWindow):
         self.text_extract_view = TextExtractView(
             on_back_click=lambda: self._switch_view(0, self.home_btn)
         )
+        self.image_extract_view = ImageExtractView(
+            on_back_click=lambda: self._switch_view(0, self.home_btn)
+        )
 
         self.stacked_widget.addWidget(self.home_view)
         self.stacked_widget.addWidget(self.merge_view)
         self.stacked_widget.addWidget(self.split_view)
         self.stacked_widget.addWidget(self.extract_view)
         self.stacked_widget.addWidget(self.text_extract_view)
+        self.stacked_widget.addWidget(self.image_extract_view)
 
     def _switch_view(self, index, button):
         """Switch to a different view and update navigation."""
         self.stacked_widget.setCurrentIndex(index)
 
         # Update button states
-        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.text_extract_btn]:
+        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.text_extract_btn, self.image_extract_btn]:
             btn.setProperty("active", btn == button)
             btn.style().unpolish(btn)
             btn.style().polish(btn)

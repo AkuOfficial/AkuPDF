@@ -153,3 +153,14 @@ def test_back_callback(app):
     
     view = MergeView(on_back_click=on_back_click)
     assert view is not None
+
+
+def test_merge_view_with_mixed_content(merge_view):
+    """Test merge view can handle mixed content PDF."""
+    from pathlib import Path
+    test_file = Path(__file__).parent.parent / "data" / "mixed_content.pdf"
+    if test_file.exists():
+        merge_view.files = [str(test_file)]
+        merge_view.file_list.addItem(str(test_file))
+        merge_view._update_button_states()
+        assert merge_view.clear_btn.isEnabled()

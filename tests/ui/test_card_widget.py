@@ -32,8 +32,8 @@ def test_card_widget_creation(card_widget):
 
 def test_card_widget_size(card_widget):
     """Test that card widget has correct size."""
-    assert card_widget.width() == 280
-    assert card_widget.height() == 200
+    assert card_widget.width() == 240
+    assert card_widget.height() == 180
 
 
 def test_card_widget_cursor(card_widget):

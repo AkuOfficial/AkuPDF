@@ -79,6 +79,51 @@ def apply_custom_theme(app):
             font-weight: 600;
         }
         
+        QLabel[class="nav-group-label"] {
+            font-size: 11px;
+            font-weight: 600;
+            color: #7b2cbf;
+            letter-spacing: 1px;
+            padding: 12px 20px 8px 20px;
+            margin-top: 8px;
+        }
+        
+        QScrollArea[class="sidebar-scroll"] {
+            background: transparent;
+            border: none;
+        }
+        
+        QScrollArea[class="sidebar-scroll"] > QWidget {
+            background: transparent;
+        }
+        
+        QScrollArea[class="sidebar-scroll"] QScrollBar:vertical {
+            background: #0f1729;
+            width: 8px;
+            border-radius: 4px;
+            margin: 0px;
+        }
+        
+        QScrollArea[class="sidebar-scroll"] QScrollBar::handle:vertical {
+            background: #00d9ff;
+            border-radius: 4px;
+            min-height: 20px;
+        }
+        
+        QScrollArea[class="sidebar-scroll"] QScrollBar::handle:vertical:hover {
+            background: #00b8d4;
+        }
+        
+        QScrollArea[class="sidebar-scroll"] QScrollBar::add-line:vertical,
+        QScrollArea[class="sidebar-scroll"] QScrollBar::sub-line:vertical {
+            height: 0px;
+        }
+        
+        QScrollArea[class="sidebar-scroll"] QScrollBar::add-page:vertical,
+        QScrollArea[class="sidebar-scroll"] QScrollBar::sub-page:vertical {
+            background: none;
+        }
+        
         QScrollBar:vertical {
             background: #1a1f3a;
             width: 10px;

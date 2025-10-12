@@ -45,6 +45,7 @@ def test_navigation_buttons_exist(main_window):
     assert main_window.split_btn is not None
     assert main_window.extract_btn is not None
     assert main_window.text_extract_btn is not None
+    assert main_window.image_extract_btn is not None
 
 
 def test_views_exist(main_window):
@@ -54,7 +55,8 @@ def test_views_exist(main_window):
     assert main_window.split_view is not None
     assert main_window.extract_view is not None
     assert main_window.text_extract_view is not None
-    assert main_window.stacked_widget.count() == 5
+    assert main_window.image_extract_view is not None
+    assert main_window.stacked_widget.count() == 6
 
 
 def test_initial_view_is_home(main_window):
@@ -101,3 +103,4 @@ def test_navigation_button_active_state(main_window):
     assert not main_window.split_btn.property("active")
     assert not main_window.extract_btn.property("active")
     assert not main_window.text_extract_btn.property("active")
+    assert not main_window.image_extract_btn.property("active")

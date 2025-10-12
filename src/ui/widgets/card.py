@@ -19,10 +19,8 @@ class CardWidget(QFrame):
 
     def _setup_ui(self):
         """Initialize the card's UI components."""
-        self.setMinimumSize(200, 180)
-        self.setMaximumSize(280, 200)
+        self.setFixedSize(240, 180)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
-        self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
 
         layout = QVBoxLayout(self)
         layout.setContentsMargins(32, 32, 32, 32)

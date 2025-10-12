@@ -102,3 +102,14 @@ def test_extract_page_range(test_data_dir):
         assert "Page 2" in text
         assert "Page 3" in text
         assert "Page 4" in text
+
+
+def test_extract_mixed_content(test_data_dir):
+    """Test extracting text from PDF with mixed content."""
+    pdf_path = str(test_data_dir / "mixed_content.pdf")
+    with TextExtractor(pdf_path) as extractor:
+        text = extractor.extract_all_text()
+        assert isinstance(text, str)
+        assert "Page 1" in text
+        assert "Text Only" in text
+        assert "Mixed Content" in text

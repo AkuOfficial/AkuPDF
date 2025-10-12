@@ -82,3 +82,24 @@ def test_split_landscape_pdf(tmp_path, test_data_dir):
     
     assert file_count > 0
     assert os.path.exists(f"{tmp_path}/split_1.pdf")
+
+
+def test_split_mixed_content_pdf(tmp_path, test_data_dir):
+    """Test splitting mixed content PDF."""
+    with Splitter(str(test_data_dir / "mixed_content.pdf")) as splitter:
+        file_count = splitter.split_by_pages(str(tmp_path), pages_per_file=1)
+    
+    assert file_count == 4
+    for i in range(1, 5):
+        assert os.path.exists(f"{tmp_path}/split_{i}.pdf")
+
+
+def test_extract_from_mixed_content(tmp_path, test_data_dir):
+    """Test extracting pages from mixed content PDF."""
+    output_path = f"{tmp_path}/extracted.pdf"
+    with Splitter(str(test_data_dir / "mixed_content.pdf")) as splitter:
+        splitter.extract_pages(output_path, [1, 2])
+    
+    assert os.path.exists(output_path)
+    reader = PdfReader(output_path)
+    assert len(reader.pages) == 2

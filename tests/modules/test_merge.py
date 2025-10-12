@@ -113,3 +113,9 @@ class TestMerger:
         with Merger() as merger:
             merger.process(files, str(tmp_output))
         assert count_pages(str(tmp_output)) == sum(count_pages(f) for f in files)
+
+    def test_merge_with_mixed_content_pdf(self, tmp_output, test_data_dir):
+        files = [str(test_data_dir / "mixed_content.pdf"), str(test_data_dir / "sample.pdf")]
+        with Merger() as merger:
+            merger.process(files, str(tmp_output))
+        assert count_pages(str(tmp_output)) == sum(count_pages(f) for f in files)
