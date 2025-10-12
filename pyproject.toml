@@ -20,7 +20,8 @@ prod = [
     "pypdf==6.1.1",
 #    "QDarkStyle==3.2.3",
 #    "qt-material==2.17",
-    "pdfplumber==0.11.7"
+    "pdfplumber==0.11.7",
+    "pikepdf==9.11.0"
 ]
 dev = [
     "pytest==8.4.2",

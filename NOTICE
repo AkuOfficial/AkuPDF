@@ -26,6 +26,10 @@ by its respective authors under the terms listed below.
   Licensed under the MIT License.
   See licenses/MIT-pdfplumber.txt for details.
 
+- pikepdf
+  Licensed under the Mozilla Public License 2.0 (MPL-2.0)
+  A copy of the license is provided in licenses/MPL-2.0-pikepdf.txt.
+
 - pytest
   Licensed under the MIT License.
   See licenses/MIT-pytest.txt for details.
