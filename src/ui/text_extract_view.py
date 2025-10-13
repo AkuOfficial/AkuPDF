@@ -211,10 +211,10 @@ class TextExtractView(QWidget):
         self.save_btn.setEnabled(False)
         layout.addWidget(self.save_btn)
 
-        extract_btn = QPushButton("📝  EXTRACT TEXT")
-        extract_btn.setProperty("class", "primary-button")
-        extract_btn.clicked.connect(self.extract_text)
-        layout.addWidget(extract_btn)
+        self.extract_btn = QPushButton("📝  EXTRACT TEXT")
+        self.extract_btn.setProperty("class", "primary-button")
+        self.extract_btn.clicked.connect(self.extract_text)
+        layout.addWidget(self.extract_btn)
 
         return container
 
@@ -296,6 +296,10 @@ class TextExtractView(QWidget):
         if not self.input_file:
             self._show_status("⚠️ Please select a PDF file to extract text from.", "error")
             return
+        
+        self.extract_btn.setText("⏳ Extracting...")
+        self.extract_btn.setEnabled(False)
+        self.options_section.setEnabled(False)
 
         try:
             preserve_layout = self.layout_checkbox.isChecked()
@@ -333,6 +337,10 @@ class TextExtractView(QWidget):
                 
         except Exception as e:
             self._show_status(f"❌ Failed to extract text: {str(e)}", "error")
+        finally:
+            self.extract_btn.setText("📝  EXTRACT TEXT")
+            self.extract_btn.setEnabled(True)
+            self.options_section.setEnabled(True)
 
     def save_text(self):
         """Save extracted text to file."""

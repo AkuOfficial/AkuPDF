@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QHBoxLayout, QComboBox, QSpinBox, QGroupBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QHBoxLayout, QComboBox, QSpinBox, QFrame
 import os
 
 from src.ui.widgets.drop_zone import DropZone
@@ -76,32 +76,36 @@ class PdfToImagesView(QWidget):
         self.file_info.setVisible(False)
         self.file_info.setMaximumHeight(35)
         layout.addWidget(self.file_info)
-
-        options_group = QGroupBox("Options")
-        options_group.setObjectName("optionsGroup")
-        options_layout = QVBoxLayout()
         
-        format_layout = QHBoxLayout()
-        format_layout.addWidget(QLabel("Format:"))
+        options_section = QFrame()
+        options_section.setProperty("class", "file-section")
+        options_layout = QVBoxLayout(options_section)
+        options_layout.setContentsMargins(20, 20, 20, 20)
+        options_layout.setSpacing(12)
+        
+        options_header = QLabel("OPTIONS")
+        options_header.setProperty("class", "list-header")
+        options_layout.addWidget(options_header)
+        
+        format_label = QLabel("Format:")
+        options_layout.addWidget(format_label)
         self.format_combo = QComboBox()
         self.format_combo.addItems(["png", "jpg", "jpeg"])
-        format_layout.addWidget(self.format_combo)
-        format_layout.addStretch()
-        options_layout.addLayout(format_layout)
+        options_layout.addWidget(self.format_combo)
         
-        dpi_layout = QHBoxLayout()
-        dpi_layout.addWidget(QLabel("DPI:"))
+        dpi_label = QLabel("DPI:")
+        options_layout.addWidget(dpi_label)
         self.dpi_spin = QSpinBox()
         self.dpi_spin.setMinimum(72)
         self.dpi_spin.setMaximum(600)
         self.dpi_spin.setValue(150)
         self.dpi_spin.setSingleStep(50)
-        dpi_layout.addWidget(self.dpi_spin)
-        dpi_layout.addStretch()
-        options_layout.addLayout(dpi_layout)
+        self.dpi_spin.setFixedWidth(100)
+        options_layout.addWidget(self.dpi_spin)
         
-        options_group.setLayout(options_layout)
-        layout.addWidget(options_group)
+        self.options_section = options_section
+        self.options_section.setEnabled(False)
+        layout.addWidget(options_section)
 
         button_layout = QHBoxLayout()
         button_layout.setSpacing(16)
@@ -136,6 +140,7 @@ class PdfToImagesView(QWidget):
         self.current_file = file_path
         self.file_info.setText(f"Selected: {file_path}")
         self.file_info.setVisible(True)
+        self.options_section.setEnabled(True)
         self.convert_btn.setEnabled(True)
         self.clear_btn.setEnabled(True)
         self._hide_status()
@@ -143,6 +148,7 @@ class PdfToImagesView(QWidget):
     def _clear_file(self):
         self.current_file = None
         self.file_info.setVisible(False)
+        self.options_section.setEnabled(False)
         self.convert_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
 
@@ -168,6 +174,8 @@ class PdfToImagesView(QWidget):
         self.convert_btn.setText("⏳ Converting...")
         self.convert_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
+        self.format_combo.setEnabled(False)
+        self.dpi_spin.setEnabled(False)
         
         self.worker = ConvertWorker(self.current_file, output_folder, image_format, dpi)
         self.worker.finished.connect(self._on_convert_finished)
@@ -181,6 +189,8 @@ class PdfToImagesView(QWidget):
         
         self.convert_btn.setText("🖼️  Convert to Images")
         self.convert_btn.setEnabled(True)
+        self.format_combo.setEnabled(True)
+        self.dpi_spin.setEnabled(True)
         self.worker = None
         
         self._show_status(message, "success")
@@ -190,6 +200,8 @@ class PdfToImagesView(QWidget):
         self.convert_btn.setText("🖼️  Convert to Images")
         self.convert_btn.setEnabled(True)
         self.clear_btn.setEnabled(True)
+        self.format_combo.setEnabled(True)
+        self.dpi_spin.setEnabled(True)
         self.worker = None
         
         self._show_status(f"❌ Failed to convert PDF: {error_msg}", "error")
@@ -227,21 +239,64 @@ class PdfToImagesView(QWidget):
                 border-radius: 4px;
             }
             
-            QGroupBox#optionsGroup {
+            QFrame[class="file-section"] {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #1a1f3a, stop:1 #0f1729);
+                border: 2px solid #00d9ff;
+                border-radius: 12px;
+            }
+            
+            QLabel[class="list-header"] {
                 font-size: 13px;
                 font-weight: 600;
                 color: #00d9ff;
-                border: 1px solid rgba(0, 217, 255, 0.3);
-                border-radius: 8px;
-                margin-top: 12px;
-                padding-top: 12px;
+                letter-spacing: 1px;
             }
             
-            QGroupBox#optionsGroup::title {
-                subcontrol-origin: margin;
-                subcontrol-position: top left;
-                padding: 0 8px;
-                left: 12px;
+            QLabel#optionLabel {
+                font-size: 13px;
+                color: #8892b0;
+                font-weight: 600;
+            }
+            
+            QComboBox#optionCombo {
+                background: rgba(26, 31, 58, 0.8);
+                color: #00d9ff;
+                border: 1px solid rgba(0, 217, 255, 0.3);
+                border-radius: 6px;
+                padding: 8px 12px;
+                font-size: 13px;
+                min-width: 120px;
+            }
+            
+            QComboBox#optionCombo:hover {
+                border-color: #00d9ff;
+            }
+            
+            QComboBox#optionCombo::drop-down {
+                border: none;
+                width: 20px;
+            }
+            
+            QComboBox#optionCombo QAbstractItemView {
+                background: #1a1f3a;
+                color: #00d9ff;
+                border: 1px solid #00d9ff;
+                selection-background-color: rgba(0, 217, 255, 0.2);
+            }
+            
+            QSpinBox#optionSpin {
+                background: rgba(26, 31, 58, 0.8);
+                color: #00d9ff;
+                border: 1px solid rgba(0, 217, 255, 0.3);
+                border-radius: 6px;
+                padding: 8px 12px;
+                font-size: 13px;
+                min-width: 80px;
+            }
+            
+            QSpinBox#optionSpin:hover {
+                border-color: #00d9ff;
             }
             
             QPushButton#primaryButton {

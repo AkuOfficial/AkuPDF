@@ -218,6 +218,11 @@ class MergeView(QWidget):
         )
         if not output_file:
             return
+        
+        self.merge_btn.setText("⏳ Merging...")
+        self.merge_btn.setEnabled(False)
+        self.remove_btn.setEnabled(False)
+        self.clear_btn.setEnabled(False)
             
         try:
             with Merger() as merger:
@@ -225,6 +230,11 @@ class MergeView(QWidget):
             self._show_status(f"✅ PDFs merged successfully! Saved to: {output_file}", "success")
         except Exception as e:
             self._show_status(f"❌ Failed to merge PDFs: {str(e)}", "error")
+        finally:
+            self.merge_btn.setText("🔗  MERGE PDFs")
+            self.merge_btn.setEnabled(True)
+            self.remove_btn.setEnabled(self.file_list.currentRow() >= 0)
+            self.clear_btn.setEnabled(True)
 
     def _apply_styles(self):
         """Apply futuristic styles to merge view."""

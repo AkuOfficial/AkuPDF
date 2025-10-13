@@ -1,5 +1,5 @@
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QHBoxLayout, QCheckBox, QGroupBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QHBoxLayout, QCheckBox, QFrame
 import os
 
 from src.ui.widgets.drop_zone import DropZone
@@ -69,23 +69,31 @@ class PdfToXlsxView(QWidget):
         self.drop_zone = DropZone()
         self.drop_zone.filesDropped.connect(self._handle_files_dropped)
         layout.addWidget(self.drop_zone)
+        
+        options_section = QFrame()
+        options_section.setProperty("class", "file-section")
+        options_layout = QVBoxLayout(options_section)
+        options_layout.setContentsMargins(20, 20, 20, 20)
+        options_layout.setSpacing(12)
+        
+        options_header = QLabel("OPTIONS")
+        options_header.setProperty("class", "list-header")
+        options_layout.addWidget(options_header)
+        
+        self.extract_all_check = QCheckBox("Extract tables from all pages")
+        self.extract_all_check.setObjectName("layoutCheckbox")
+        self.extract_all_check.setChecked(True)
+        options_layout.addWidget(self.extract_all_check)
+        
+        self.options_section = options_section
+        self.options_section.setEnabled(False)
+        layout.addWidget(options_section)
 
         self.file_info = QLabel("")
         self.file_info.setObjectName("fileInfo")
         self.file_info.setVisible(False)
         self.file_info.setMaximumHeight(35)
         layout.addWidget(self.file_info)
-
-        options_group = QGroupBox("Options")
-        options_group.setObjectName("optionsGroup")
-        options_layout = QVBoxLayout()
-        
-        self.extract_all_check = QCheckBox("Extract tables from all pages")
-        self.extract_all_check.setChecked(True)
-        options_layout.addWidget(self.extract_all_check)
-        
-        options_group.setLayout(options_layout)
-        layout.addWidget(options_group)
 
         button_layout = QHBoxLayout()
         button_layout.setSpacing(16)
@@ -120,6 +128,7 @@ class PdfToXlsxView(QWidget):
         self.current_file = file_path
         self.file_info.setText(f"Selected: {file_path}")
         self.file_info.setVisible(True)
+        self.options_section.setEnabled(True)
         self.convert_btn.setEnabled(True)
         self.clear_btn.setEnabled(True)
         self._hide_status()
@@ -127,6 +136,7 @@ class PdfToXlsxView(QWidget):
     def _clear_file(self):
         self.current_file = None
         self.file_info.setVisible(False)
+        self.options_section.setEnabled(False)
         self.convert_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
 
@@ -151,6 +161,7 @@ class PdfToXlsxView(QWidget):
         self.convert_btn.setText("⏳ Converting...")
         self.convert_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
+        self.extract_all_check.setEnabled(False)
         
         self.worker = ConvertWorker(self.current_file, output_path, extract_all_pages)
         self.worker.finished.connect(self._on_convert_finished)
@@ -164,6 +175,7 @@ class PdfToXlsxView(QWidget):
         
         self.convert_btn.setText("📊  Convert to XLSX")
         self.convert_btn.setEnabled(True)
+        self.extract_all_check.setEnabled(True)
         self.worker = None
         
         self._show_status(message, "success")
@@ -173,6 +185,7 @@ class PdfToXlsxView(QWidget):
         self.convert_btn.setText("📊  Convert to XLSX")
         self.convert_btn.setEnabled(True)
         self.clear_btn.setEnabled(True)
+        self.extract_all_check.setEnabled(True)
         self.worker = None
         
         self._show_status(f"❌ Failed to convert PDF: {error_msg}", "error")
@@ -210,21 +223,41 @@ class PdfToXlsxView(QWidget):
                 border-radius: 4px;
             }
             
-            QGroupBox#optionsGroup {
+            QFrame[class="file-section"] {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #1a1f3a, stop:1 #0f1729);
+                border: 2px solid #00d9ff;
+                border-radius: 12px;
+            }
+            
+            QLabel[class="list-header"] {
                 font-size: 13px;
                 font-weight: 600;
                 color: #00d9ff;
-                border: 1px solid rgba(0, 217, 255, 0.3);
-                border-radius: 8px;
-                margin-top: 12px;
-                padding-top: 12px;
+                letter-spacing: 1px;
             }
             
-            QGroupBox#optionsGroup::title {
-                subcontrol-origin: margin;
-                subcontrol-position: top left;
-                padding: 0 8px;
-                left: 12px;
+            QCheckBox#optionCheck {
+                color: #8892b0;
+                font-size: 13px;
+                spacing: 8px;
+            }
+            
+            QCheckBox#optionCheck::indicator {
+                width: 20px;
+                height: 20px;
+                border: 2px solid #00d9ff;
+                border-radius: 4px;
+                background: #0a0e27;
+            }
+            
+            QCheckBox#optionCheck::indicator:checked {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #00d9ff, stop:1 #00b8d4);
+            }
+            
+            QCheckBox#optionCheck::indicator:hover {
+                border-color: #00f0ff;
             }
             
             QPushButton#primaryButton {

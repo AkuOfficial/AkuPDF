@@ -156,10 +156,10 @@ class ExtractView(QWidget):
 
         layout.addStretch()
 
-        extract_btn = QPushButton("📄  EXTRACT PAGES")
-        extract_btn.setProperty("class", "primary-button")
-        extract_btn.clicked.connect(self.extract_pages)
-        layout.addWidget(extract_btn)
+        self.extract_btn = QPushButton("📄  EXTRACT PAGES")
+        self.extract_btn.setProperty("class", "primary-button")
+        self.extract_btn.clicked.connect(self.extract_pages)
+        layout.addWidget(self.extract_btn)
 
         return container
 
@@ -255,6 +255,10 @@ class ExtractView(QWidget):
         )
         if not output_file:
             return
+        
+        self.extract_btn.setText("⏳ Extracting...")
+        self.extract_btn.setEnabled(False)
+        self.options_section.setEnabled(False)
             
         try:
             with Splitter(self.input_file) as splitter:
@@ -262,6 +266,10 @@ class ExtractView(QWidget):
             self._show_status(f"✅ Pages extracted successfully! Saved to: {output_file}", "success")
         except Exception as e:
             self._show_status(f"❌ Failed to extract pages: {str(e)}", "error")
+        finally:
+            self.extract_btn.setText("📄  EXTRACT PAGES")
+            self.extract_btn.setEnabled(True)
+            self.options_section.setEnabled(True)
 
     def _apply_styles(self):
         """Apply futuristic styles to extract view."""

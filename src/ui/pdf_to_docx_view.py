@@ -1,6 +1,7 @@
 from PySide6.QtCore import Qt, QThread, Signal
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QHBoxLayout, QCheckBox, QSpinBox, QGroupBox
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel, QPushButton, QFileDialog, QHBoxLayout, QCheckBox, QSpinBox, QRadioButton, QButtonGroup, QFrame
 import os
+from pypdf import PdfReader
 
 from src.ui.widgets.drop_zone import DropZone
 from src.modules.pdf_to_docx import PdfToDocxConverter
@@ -77,34 +78,70 @@ class PdfToDocxView(QWidget):
         self.file_info.setVisible(False)
         self.file_info.setMaximumHeight(35)
         layout.addWidget(self.file_info)
-
-        options_group = QGroupBox("Options")
-        options_group.setObjectName("optionsGroup")
-        options_layout = QVBoxLayout()
         
-        page_range_layout = QHBoxLayout()
-        page_range_layout.addWidget(QLabel("Start Page:"))
+        options_section = QFrame()
+        options_section.setProperty("class", "file-section")
+        options_layout = QVBoxLayout(options_section)
+        options_layout.setContentsMargins(20, 20, 20, 20)
+        options_layout.setSpacing(12)
+        
+        options_header = QLabel("OPTIONS")
+        options_header.setProperty("class", "list-header")
+        options_layout.addWidget(options_header)
+        
+        self.page_group = QButtonGroup(self)
+        
+        self.all_pages_radio = QRadioButton("Convert all pages")
+        self.all_pages_radio.setObjectName("pageRadio")
+        self.all_pages_radio.setChecked(True)
+        self.all_pages_radio.toggled.connect(self._on_page_option_changed)
+        self.page_group.addButton(self.all_pages_radio)
+        options_layout.addWidget(self.all_pages_radio)
+        
+        self.range_radio = QRadioButton("Convert page range:")
+        self.range_radio.setObjectName("pageRadio")
+        self.range_radio.toggled.connect(self._on_page_option_changed)
+        self.page_group.addButton(self.range_radio)
+        options_layout.addWidget(self.range_radio)
+        
+        page_range_container = QWidget()
+        page_range_layout = QHBoxLayout(page_range_container)
+        page_range_layout.setContentsMargins(26, 0, 0, 0)
+        page_range_layout.setSpacing(8)
+        
+        start_label = QLabel("Start:")
+        page_range_layout.addWidget(start_label)
         self.start_page_spin = QSpinBox()
         self.start_page_spin.setMinimum(1)
         self.start_page_spin.setMaximum(9999)
         self.start_page_spin.setValue(1)
+        self.start_page_spin.setEnabled(False)
+        self.start_page_spin.setFixedWidth(100)
         page_range_layout.addWidget(self.start_page_spin)
-        page_range_layout.addWidget(QLabel("End Page:"))
+        
+        end_label = QLabel("End:")
+        page_range_layout.addWidget(end_label)
         self.end_page_spin = QSpinBox()
-        self.end_page_spin.setMinimum(0)
+        self.end_page_spin.setMinimum(1)
         self.end_page_spin.setMaximum(9999)
-        self.end_page_spin.setValue(0)
-        self.end_page_spin.setSpecialValueText("All")
+        self.end_page_spin.setValue(1)
+        self.end_page_spin.setEnabled(False)
+        self.end_page_spin.setFixedWidth(100)
         page_range_layout.addWidget(self.end_page_spin)
         page_range_layout.addStretch()
-        options_layout.addLayout(page_range_layout)
+        options_layout.addWidget(page_range_container)
         
         self.multi_page_table_check = QCheckBox("Parse multi-page tables")
+        self.multi_page_table_check.setObjectName("layoutCheckbox")
         self.multi_page_table_check.setChecked(True)
         options_layout.addWidget(self.multi_page_table_check)
         
-        options_group.setLayout(options_layout)
-        layout.addWidget(options_group)
+        self.options_section = options_section
+        self.options_section.setEnabled(False)
+        layout.addWidget(options_section)
+        
+        self.start_page_spin.valueChanged.connect(self._validate_page_range)
+        self.end_page_spin.valueChanged.connect(self._validate_page_range)
 
         button_layout = QHBoxLayout()
         button_layout.setSpacing(16)
@@ -137,15 +174,31 @@ class PdfToDocxView(QWidget):
     
     def _on_file_selected(self, file_path):
         self.current_file = file_path
-        self.file_info.setText(f"Selected: {file_path}")
+        reader = PdfReader(file_path)
+        self.total_pages = len(reader.pages)
+        self.file_info.setText(f"Selected: {file_path} ({self.total_pages} pages)")
         self.file_info.setVisible(True)
+        self.start_page_spin.setMaximum(self.total_pages)
+        self.end_page_spin.setMaximum(self.total_pages)
+        self.end_page_spin.setValue(self.total_pages)
+        self.options_section.setEnabled(True)
         self.convert_btn.setEnabled(True)
         self.clear_btn.setEnabled(True)
         self._hide_status()
+    
+    def _validate_page_range(self):
+        if self.start_page_spin.value() > self.end_page_spin.value():
+            self.end_page_spin.setValue(self.start_page_spin.value())
+    
+    def _on_page_option_changed(self):
+        enabled = self.range_radio.isChecked()
+        self.start_page_spin.setEnabled(enabled)
+        self.end_page_spin.setEnabled(enabled)
 
     def _clear_file(self):
         self.current_file = None
         self.file_info.setVisible(False)
+        self.options_section.setEnabled(False)
         self.convert_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
 
@@ -165,13 +218,23 @@ class PdfToDocxView(QWidget):
 
         self.output_path = output_path
         
-        start_page = self.start_page_spin.value() - 1
-        end_page = self.end_page_spin.value() if self.end_page_spin.value() > 0 else None
+        if self.all_pages_radio.isChecked():
+            start_page = 0
+            end_page = None
+        else:
+            start_page = self.start_page_spin.value() - 1
+            end_page = self.end_page_spin.value()
+        
         multi_page_table = self.multi_page_table_check.isChecked()
         
         self.convert_btn.setText("⏳ Converting...")
         self.convert_btn.setEnabled(False)
         self.clear_btn.setEnabled(False)
+        self.all_pages_radio.setEnabled(False)
+        self.range_radio.setEnabled(False)
+        self.start_page_spin.setEnabled(False)
+        self.end_page_spin.setEnabled(False)
+        self.multi_page_table_check.setEnabled(False)
         
         self.worker = ConvertWorker(self.current_file, output_path, start_page, end_page, multi_page_table)
         self.worker.finished.connect(self._on_convert_finished)
@@ -184,6 +247,10 @@ class PdfToDocxView(QWidget):
         
         self.convert_btn.setText("📄  Convert to DOCX")
         self.convert_btn.setEnabled(True)
+        self.all_pages_radio.setEnabled(True)
+        self.range_radio.setEnabled(True)
+        self._on_page_option_changed()
+        self.multi_page_table_check.setEnabled(True)
         self.worker = None
         
         self._show_status(message, "success")
@@ -193,6 +260,10 @@ class PdfToDocxView(QWidget):
         self.convert_btn.setText("📄  Convert to DOCX")
         self.convert_btn.setEnabled(True)
         self.clear_btn.setEnabled(True)
+        self.all_pages_radio.setEnabled(True)
+        self.range_radio.setEnabled(True)
+        self._on_page_option_changed()
+        self.multi_page_table_check.setEnabled(True)
         self.worker = None
         
         self._show_status(f"❌ Failed to convert PDF: {error_msg}", "error")
@@ -228,6 +299,86 @@ class PdfToDocxView(QWidget):
                 background: rgba(0, 217, 255, 0.05);
                 border: 1px solid rgba(0, 217, 255, 0.2);
                 border-radius: 4px;
+            }
+            
+            QFrame[class="file-section"] {
+                background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                    stop:0 #1a1f3a, stop:1 #0f1729);
+                border: 2px solid #00d9ff;
+                border-radius: 12px;
+            }
+            
+            QLabel[class="list-header"] {
+                font-size: 13px;
+                font-weight: 600;
+                color: #00d9ff;
+                letter-spacing: 1px;
+            }
+            
+            QLabel#optionLabel {
+                font-size: 13px;
+                color: #8892b0;
+                font-weight: 600;
+            }
+            
+            QSpinBox#optionSpin {
+                background: rgba(26, 31, 58, 0.8);
+                color: #00d9ff;
+                border: 1px solid rgba(0, 217, 255, 0.3);
+                border-radius: 6px;
+                padding: 8px 12px;
+                font-size: 13px;
+                min-width: 80px;
+            }
+            
+            QSpinBox#optionSpin:hover {
+                border-color: #00d9ff;
+            }
+            
+            QCheckBox#optionCheck {
+                color: #8892b0;
+                font-size: 13px;
+                spacing: 8px;
+            }
+            
+            QCheckBox#optionCheck::indicator {
+                width: 20px;
+                height: 20px;
+                border: 2px solid #00d9ff;
+                border-radius: 4px;
+                background: #0a0e27;
+            }
+            
+            QCheckBox#optionCheck::indicator:checked {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #00d9ff, stop:1 #00b8d4);
+            }
+            
+            QCheckBox#optionCheck::indicator:hover {
+                border-color: #00f0ff;
+            }
+            
+            QRadioButton#optionRadio {
+                color: #8892b0;
+                font-size: 13px;
+                spacing: 8px;
+            }
+            
+            QRadioButton#optionRadio::indicator {
+                width: 18px;
+                height: 18px;
+                border: 2px solid #00d9ff;
+                border-radius: 9px;
+                background: #0a0e27;
+            }
+            
+            QRadioButton#optionRadio::indicator:checked {
+                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                    stop:0 #00d9ff, stop:1 #00b8d4);
+            }
+            
+            QRadioButton#optionRadio::indicator:hover {
+                border-color: #00f0ff;
             }
             
             QPushButton#primaryButton {

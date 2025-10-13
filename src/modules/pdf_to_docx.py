@@ -1,7 +1,9 @@
 import pdfplumber
 from docx import Document
-from docx.shared import Pt
+from docx.shared import Pt, Inches
 import os
+import io
+from PIL import Image
 
 
 class PdfToDocxConverter:
@@ -43,6 +45,19 @@ class PdfToDocxConverter:
                             for i, row in enumerate(table):
                                 for j, cell in enumerate(row):
                                     doc_table.rows[i].cells[j].text = str(cell) if cell else ""
+                
+                images = page.images
+                for img in images:
+                    try:
+                        x0, y0, x1, y1 = img['x0'], img['top'], img['x1'], img['bottom']
+                        cropped = page.within_bbox((x0, y0, x1, y1))
+                        img_obj = cropped.to_image(resolution=150)
+                        img_bytes = io.BytesIO()
+                        img_obj.save(img_bytes, format='PNG')
+                        img_bytes.seek(0)
+                        doc.add_picture(img_bytes, width=Inches(4))
+                    except:
+                        pass
         
         doc.save(output_path)
         

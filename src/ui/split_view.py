@@ -177,10 +177,10 @@ class SplitView(QWidget):
 
         layout.addStretch()
 
-        split_btn = QPushButton("✂️  SPLIT PDF")
-        split_btn.setProperty("class", "primary-button")
-        split_btn.clicked.connect(self.split_file)
-        layout.addWidget(split_btn)
+        self.split_btn = QPushButton("✂️  SPLIT PDF")
+        self.split_btn.setProperty("class", "primary-button")
+        self.split_btn.clicked.connect(self.split_file)
+        layout.addWidget(self.split_btn)
 
         return container
 
@@ -278,6 +278,10 @@ class SplitView(QWidget):
         output_dir = QFileDialog.getExistingDirectory(self, "Select Output Directory")
         if not output_dir:
             return
+        
+        self.split_btn.setText("⏳ Splitting...")
+        self.split_btn.setEnabled(False)
+        self.options_section.setEnabled(False)
             
         try:
             with Splitter(self.input_file) as splitter:
@@ -286,6 +290,10 @@ class SplitView(QWidget):
             self._show_status(f"✅ PDF split successfully! Created {file_count} files in: {output_dir}", "success")
         except Exception as e:
             self._show_status(f"❌ Failed to split PDF: {str(e)}", "error")
+        finally:
+            self.split_btn.setText("✂️  SPLIT PDF")
+            self.split_btn.setEnabled(True)
+            self.options_section.setEnabled(True)
 
     def _apply_styles(self):
         """Apply futuristic styles to split view."""

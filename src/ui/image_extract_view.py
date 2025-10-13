@@ -176,10 +176,10 @@ class ImageExtractView(QWidget):
 
         layout.addStretch()
 
-        extract_btn = QPushButton("🖼️  EXTRACT IMAGES")
-        extract_btn.setProperty("class", "primary-button")
-        extract_btn.clicked.connect(self.extract_images)
-        layout.addWidget(extract_btn)
+        self.extract_btn = QPushButton("🖼️  EXTRACT IMAGES")
+        self.extract_btn.setProperty("class", "primary-button")
+        self.extract_btn.clicked.connect(self.extract_images)
+        layout.addWidget(self.extract_btn)
 
         return container
 
@@ -262,6 +262,10 @@ class ImageExtractView(QWidget):
         output_dir = QFileDialog.getExistingDirectory(self, "Select Output Directory")
         if not output_dir:
             return
+        
+        self.extract_btn.setText("⏳ Extracting...")
+        self.extract_btn.setEnabled(False)
+        self.options_section.setEnabled(False)
 
         try:
             with ImageExtractor(self.input_file) as extractor:
@@ -291,6 +295,10 @@ class ImageExtractView(QWidget):
                 
         except Exception as e:
             self._show_status(f"❌ Failed to extract images: {str(e)}", "error")
+        finally:
+            self.extract_btn.setText("🖼️  EXTRACT IMAGES")
+            self.extract_btn.setEnabled(True)
+            self.options_section.setEnabled(True)
 
     def _apply_styles(self):
         """Apply futuristic styles to image extract view."""
