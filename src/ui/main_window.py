@@ -21,6 +21,7 @@ from src.ui.compress_view import CompressView
 from src.ui.pdf_to_docx_view import PdfToDocxView
 from src.ui.pdf_to_xlsx_view import PdfToXlsxView
 from src.ui.pdf_to_images_view import PdfToImagesView
+from src.ui.watermark_view import WatermarkView
 
 
 class MainWindow(QMainWindow):
@@ -108,19 +109,22 @@ class MainWindow(QMainWindow):
         self.split_btn = QPushButton("✂️  Split PDFs")
         self.extract_btn = QPushButton("📑  Extract Pages")
         self.compress_btn = QPushButton("🗜️  Compress PDF")
+        self.watermark_btn = QPushButton("💧  Add Watermark")
         
-        for btn in [self.merge_btn, self.split_btn, self.extract_btn, self.compress_btn]:
+        for btn in [self.merge_btn, self.split_btn, self.extract_btn, self.compress_btn, self.watermark_btn]:
             btn.setProperty("class", "nav-button")
         
         self.merge_btn.clicked.connect(lambda: self._switch_view(1, self.merge_btn))
         self.split_btn.clicked.connect(lambda: self._switch_view(2, self.split_btn))
         self.extract_btn.clicked.connect(lambda: self._switch_view(3, self.extract_btn))
         self.compress_btn.clicked.connect(lambda: self._switch_view(4, self.compress_btn))
+        self.watermark_btn.clicked.connect(lambda: self._switch_view(10, self.watermark_btn))
         
         nav_layout.addWidget(self.merge_btn)
         nav_layout.addWidget(self.split_btn)
         nav_layout.addWidget(self.extract_btn)
         nav_layout.addWidget(self.compress_btn)
+        nav_layout.addWidget(self.watermark_btn)
         
         # Content Extraction Group
         extract_label = QLabel("CONTENT EXTRACTION")
@@ -203,6 +207,9 @@ class MainWindow(QMainWindow):
         self.images_view = PdfToImagesView(
             on_back_click=lambda: self._switch_view(0, self.home_btn)
         )
+        self.watermark_view = WatermarkView(
+            on_back_click=lambda: self._switch_view(0, self.home_btn)
+        )
 
         self.stacked_widget.addWidget(self.home_view)
         self.stacked_widget.addWidget(self.merge_view)
@@ -214,13 +221,14 @@ class MainWindow(QMainWindow):
         self.stacked_widget.addWidget(self.docx_view)
         self.stacked_widget.addWidget(self.xlsx_view)
         self.stacked_widget.addWidget(self.images_view)
+        self.stacked_widget.addWidget(self.watermark_view)
 
     def _switch_view(self, index, button):
         """Switch to a different view and update navigation."""
         self.stacked_widget.setCurrentIndex(index)
 
         # Update button states
-        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.compress_btn, self.text_extract_btn, self.image_extract_btn, self.docx_btn, self.xlsx_btn, self.images_btn]:
+        for btn in [self.home_btn, self.merge_btn, self.split_btn, self.extract_btn, self.compress_btn, self.watermark_btn, self.text_extract_btn, self.image_extract_btn, self.docx_btn, self.xlsx_btn, self.images_btn]:
             btn.setProperty("active", btn == button)
             btn.style().unpolish(btn)
             btn.style().polish(btn)

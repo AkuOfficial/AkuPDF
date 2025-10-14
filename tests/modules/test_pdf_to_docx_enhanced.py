@@ -5,7 +5,7 @@ from src.modules.pdf_to_docx import PdfToDocxConverter
 
 @pytest.fixture
 def sample_pdf():
-    return "tests/data/sample.pdf"
+    return os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "tests", "data", "sample.pdf")
 
 
 @pytest.fixture

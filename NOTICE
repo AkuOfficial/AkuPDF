@@ -15,7 +15,7 @@ by its respective authors under the terms listed below.
 
 - PySide6
   Licensed under the GNU Lesser General Public License v3.0 (LGPL-3.0-only)
-  A copy of the license is provided in licenses/LGPL-3.0-PySide6.txt.
+  See licenses/LGPL-3.0-PySide6.txt for details.
   You may replace PySide6 with a compatible version as allowed by LGPL-3.0.
 
 - pypdf
@@ -28,7 +28,7 @@ by its respective authors under the terms listed below.
 
 - pikepdf
   Licensed under the Mozilla Public License 2.0 (MPL-2.0)
-  A copy of the license is provided in licenses/MPL-2.0-pikepdf.txt.
+  See licenses/MPL-2.0-pikepdf.txt for details.
 
 - Pillow
   Licensed under the MIT-CMU License.
@@ -41,6 +41,10 @@ by its respective authors under the terms listed below.
 - openpyxl
   Licensed under the MIT License.
   See licenses/MIT-openpyxl.txt for details.
+
+- reportlab
+  Licensed under the BSD License.
+  See licenses/BSD-3-Clause-reportlab.txt for details.
 
 - pytest
   Licensed under the MIT License.
@@ -64,7 +68,7 @@ by its respective authors under the terms listed below.
 
 - just
   Licensed under CC0 1.0 Universal (Public Domain Dedication).
-  A copy of the license is provided in `licenses/CC0-1.0-just.txt`.
+  See licenses/CC0-1.0-just.txt for details.
 
 -------------------------------------------------------------------------------
 End of NOTICE file

@@ -1,5 +1,4 @@
-from pypdf import PdfReader
-from PIL import Image
+import pdfplumber
 import os
 
 
@@ -22,39 +21,19 @@ class PdfToImagesConverter:
         """
         os.makedirs(output_folder, exist_ok=True)
         
-        reader = PdfReader(self.input_path)
         base_name = os.path.splitext(os.path.basename(self.input_path))[0]
-        
-        scale = dpi / 72.0
         
         image_paths = []
         total_size = 0
         
-        for page_num, page in enumerate(reader.pages):
-            if "/XObject" in page['/Resources']:
-                x_object = page['/Resources']['/XObject'].get_object()
+        with pdfplumber.open(self.input_path) as pdf:
+            for page_num, page in enumerate(pdf.pages):
+                img = page.to_image(resolution=dpi)
+                image_path = os.path.join(output_folder, f"{base_name}_page_{page_num + 1}.{image_format}")
+                img.save(image_path)
                 
-                for obj_name in x_object:
-                    obj = x_object[obj_name]
-                    
-                    if obj['/Subtype'] == '/Image':
-                        size = (int(obj['/Width'] * scale), int(obj['/Height'] * scale))
-                        data = obj.get_data()
-                        
-                        if obj['/ColorSpace'] == '/DeviceRGB':
-                            mode = "RGB"
-                        else:
-                            mode = "P"
-                        
-                        img = Image.frombytes(mode, (obj['/Width'], obj['/Height']), data)
-                        img = img.resize(size, Image.Resampling.LANCZOS)
-                        
-                        image_path = os.path.join(output_folder, f"{base_name}_page_{page_num + 1}.{image_format}")
-                        img.save(image_path)
-                        
-                        image_paths.append(image_path)
-                        total_size += os.path.getsize(image_path)
-                        break
+                image_paths.append(image_path)
+                total_size += os.path.getsize(image_path)
         
         return {
             "input_file": self.input_path,
