@@ -18,17 +18,26 @@
 - **PDF to Images** - Convert pages to PNG/JPG images
 
 ## Encryption Features
-- **Add Password**: Protect PDF with user password (AES-256 encryption)
-- **Owner Password**: Optional separate password for full permissions
-- **Remove Password**: Decrypt password-protected PDFs
-- **Password Validation**: Verify password before decryption
+
+### Add Password Protection
+- **User Password**: Required password to open and view the PDF (AES-256 encryption)
+- **Owner Password**: Optional separate password that grants full permissions (edit, print, copy)
+  - If not set, the user password will be used as the owner password
+  - Allows you to restrict what users can do even after opening the PDF
+  - Example: Set user password for viewing, owner password for editing
+
+### Remove Password Protection
+- **With Password**: Decrypt PDF when you know the user or owner password
+- **Without Password (Recovery)**: Attempt to remove encryption without knowing the password
+  - Only works for PDFs with weak or no owner password protection
+  - Cannot decrypt PDFs with strong user password protection
+  - Success depends on the PDF's encryption settings
 
 ## Technical Details
 - All features use pure Python dependencies (no external binaries required)
 - Encryption uses AES-256 algorithm via pypdf
-- User password: Required to open the PDF
-- Owner password: Optional, grants full permissions
-- Wrong password handling with clear error messages
+- Password recovery uses pikepdf for advanced PDF manipulation
+- Clear error messages for wrong passwords or failed recovery attempts
 
 ## Dependencies
 All dependencies are Python packages with permissive licenses:

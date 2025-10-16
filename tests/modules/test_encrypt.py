@@ -38,8 +38,8 @@ def test_add_password_with_owner(sample_pdf, output_pdf):
     assert reader.is_encrypted
 
 
-def test_remove_password(sample_pdf, tmp_path):
-    """Test removing password from PDF."""
+def test_remove_password_with_password(sample_pdf, tmp_path):
+    """Test removing password from PDF with password."""
     encrypted_pdf = str(tmp_path / "encrypted.pdf")
     decrypted_pdf = str(tmp_path / "decrypted.pdf")
     password = "test123"
@@ -48,7 +48,7 @@ def test_remove_password(sample_pdf, tmp_path):
     with PDFEncryptor(sample_pdf) as encryptor:
         encryptor.add_password(encrypted_pdf, password)
     
-    # Then decrypt
+    # Then decrypt with password
     with PDFEncryptor(encrypted_pdf) as encryptor:
         result = encryptor.remove_password(decrypted_pdf, password)
     
@@ -58,6 +58,49 @@ def test_remove_password(sample_pdf, tmp_path):
     # Verify PDF is not encrypted
     reader = PdfReader(decrypted_pdf)
     assert not reader.is_encrypted
+
+
+def test_remove_password_without_password(sample_pdf, tmp_path):
+    """Test removing password from PDF without password (recovery)."""
+    encrypted_pdf = str(tmp_path / "encrypted.pdf")
+    decrypted_pdf = str(tmp_path / "decrypted.pdf")
+    
+    # Encrypt with only owner password (weak protection)
+    with PDFEncryptor(sample_pdf) as encryptor:
+        encryptor.add_password(encrypted_pdf, "", "owner123")
+    
+    # Try to decrypt without password
+    with PDFEncryptor(encrypted_pdf) as encryptor:
+        result = encryptor.remove_password(decrypted_pdf, None)
+    
+    assert os.path.exists(decrypted_pdf)
+    assert result["output_size"] > 0
+
+
+def test_remove_password_recovery_fails_with_strong_password(sample_pdf, tmp_path):
+    """Test password recovery fails with strong user password."""
+    encrypted_pdf = str(tmp_path / "encrypted.pdf")
+    decrypted_pdf = str(tmp_path / "decrypted.pdf")
+    
+    # Encrypt with strong user password
+    with PDFEncryptor(sample_pdf) as encryptor:
+        encryptor.add_password(encrypted_pdf, "strong123")
+    
+    # Try to decrypt without password should fail
+    with PDFEncryptor(encrypted_pdf) as encryptor:
+        with pytest.raises(ValueError, match="Cannot decrypt|strong user password"):
+            encryptor.remove_password(decrypted_pdf, None)
+
+
+def test_add_password_with_empty_owner(sample_pdf, output_pdf):
+    """Test adding password with empty owner password uses user password."""
+    with PDFEncryptor(sample_pdf) as encryptor:
+        result = encryptor.add_password(output_pdf, "user123", None)
+    
+    assert os.path.exists(output_pdf)
+    reader = PdfReader(output_pdf)
+    assert reader.is_encrypted
+    assert reader.decrypt("user123") > 0
 
 
 def test_remove_password_wrong_password(sample_pdf, tmp_path):

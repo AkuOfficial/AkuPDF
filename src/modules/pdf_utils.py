@@ -46,6 +46,12 @@ def get_pdf_info(file_path):
     Returns:
         dict with 'total_pages' key, or raises exception on error
     """
-    reader = PdfReader(file_path, strict=False)
-    total_pages = len(reader.pages)
-    return {'total_pages': total_pages}
+    try:
+        import pikepdf
+        with pikepdf.open(file_path) as pdf:
+            return {'total_pages': len(pdf.pages)}
+    except pikepdf.PasswordError:
+        return {'total_pages': 0}
+    except:
+        reader = PdfReader(file_path, strict=False)
+        return {'total_pages': len(reader.pages)}

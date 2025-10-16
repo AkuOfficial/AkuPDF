@@ -1,6 +1,7 @@
 """PDF encryption and decryption module."""
 import os
 from pypdf import PdfReader, PdfWriter
+import pikepdf
 
 
 class PDFEncryptor:
@@ -46,30 +47,47 @@ class PDFEncryptor:
             "page_count": len(reader.pages)
         }
 
-    def remove_password(self, output_path, password):
+    def remove_password(self, output_path, password=None):
         """Remove password protection from PDF.
         
         Args:
             output_path: Path to save decrypted PDF
-            password: Current password to decrypt
+            password: Current password to decrypt (optional - if None, attempts recovery)
             
         Returns:
             dict with output_size and page_count
         """
-        reader = PdfReader(self.input_path)
-        
-        if reader.is_encrypted:
-            if not reader.decrypt(password):
-                raise ValueError("Incorrect password")
+        if password:
+            # Standard decryption with password
+            reader = PdfReader(self.input_path)
+            
+            if reader.is_encrypted:
+                if not reader.decrypt(password):
+                    raise ValueError("Incorrect password")
 
-        writer = PdfWriter()
-        for page in reader.pages:
-            writer.add_page(page)
+            writer = PdfWriter()
+            for page in reader.pages:
+                writer.add_page(page)
 
-        with open(output_path, 'wb') as output_file:
-            writer.write(output_file)
+            with open(output_path, 'wb') as output_file:
+                writer.write(output_file)
 
-        return {
-            "output_size": os.path.getsize(output_path),
-            "page_count": len(reader.pages)
-        }
+            return {
+                "output_size": os.path.getsize(output_path),
+                "page_count": len(reader.pages)
+            }
+        else:
+            # Attempt password recovery using pikepdf
+            try:
+                with pikepdf.open(self.input_path, allow_overwriting_input=False) as pdf:
+                    pdf.save(output_path)
+                    page_count = len(pdf.pages)
+                
+                return {
+                    "output_size": os.path.getsize(output_path),
+                    "page_count": page_count
+                }
+            except pikepdf.PasswordError:
+                raise ValueError("Cannot decrypt: PDF has a strong user password. Password is required.")
+            except Exception as e:
+                raise ValueError(f"Failed to decrypt PDF: {str(e)}")

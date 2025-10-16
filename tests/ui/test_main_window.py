@@ -57,7 +57,9 @@ def test_views_exist(main_window):
     assert main_window.text_extract_view is not None
     assert main_window.image_extract_view is not None
     assert main_window.compress_view is not None
-    assert main_window.stacked_widget.count() == 12
+    assert main_window.add_password_view is not None
+    assert main_window.remove_password_view is not None
+    assert main_window.stacked_widget.count() == 13
 
 
 def test_initial_view_is_home(main_window):
