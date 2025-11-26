@@ -6,7 +6,8 @@
 - **Extract Pages** - Extract specific pages from PDF
 - **Compress PDF** - Reduce PDF file size with quality levels
 - **Add Watermark** - Add text watermark with opacity control
-- **Encrypt PDF** - Add/remove password protection (AES-256)
+- **Add Password** - Add password protection (AES-256)
+- **Remove Password** - Remove password protection
 
 ## Content Extraction
 - **Extract Text** - Extract text content with layout preservation
@@ -41,11 +42,12 @@
 
 ## Dependencies
 All dependencies are Python packages with permissive licenses:
-- pypdf (BSD) - PDF manipulation and encryption
+- PySide6 (LGPL-3.0) - GUI framework
+- pypdf (BSD-3-Clause) - PDF manipulation and encryption
+- qt-material (BSD-2-Clause) - Material design styling
 - pdfplumber (MIT) - Text and table extraction
-- pikepdf (MPL-2.0) - PDF compression
+- pikepdf (MPL-2.0) - Advanced PDF manipulation and compression
 - python-docx (MIT) - DOCX generation
 - openpyxl (MIT) - Excel generation
-- Pillow (HPND) - Image processing
-- reportlab (BSD-like) - Watermark generation
-- PySide6 (LGPL-3.0) - GUI framework
+- Pillow (MIT) - Image processing
+- reportlab (BSD-3-Clause) - Watermark generation
